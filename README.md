@@ -18,7 +18,13 @@ The following confidence intervals are implemented:
 
 * The exact interval based on the incomplete beta function.
 
+# Installation
 
+You can install pynomial from github using
+
+```
+ pip install git+https://github.com/Dpananos/pynomial
+```
 
 # Getting Started
 
