@@ -28,6 +28,40 @@ You can install pynomial from github using
 
 # Getting Started
 
+## Usage
+
+Using pynomial is very straight forward. Each interval function has three common arguments: `x` -- the number of success, `n` -- the number of trials, and `conf` -- the desired confidence level.  Both `x` and `n` can be either integers or arrays of integers and conf must be a float between 0 and 1 (the default is 0.95 for a 95% confidence interval).  After calling an interval function with the propper arguments, a dataframe will be returned yeilding an estimate of the risk as well as the lower and upper confidence limits.  As an example, suppose I flipped a coin 20 times and observed 12 heads.  Using the `wilson` function to compute a Wilson score confidence interval, the output would be
+
+```python
+from pynomial import wilson
+x = 12
+n = 20
+wilson(x=x, n=n
+```
+
+```
+        estimate     lower     upper
+Wilson       0.6  0.386582  0.781193
+```
+
+Each interval function is vectorized, so we can compute confidence intervals for many experiments at once.
+
+```python
+from pynomial import wilson
+x = np.array([11, 12, 13])
+n = 20
+wilson(x=x, n=n)
+```
+
+```
+        estimate     lower     upper
+Wilson      0.55  0.342085  0.741802
+Wilson      0.60  0.386582  0.781193
+Wilson      0.65  0.432854  0.818808
+```
+
+The output of each interval function is a pandas dataframe, making plotting the confidence intervals straightforward.
+
 ## Information on Binomial Random Variables
 
 Many textbooks have their own treatment of binomial random variables and confidence intervals. Recommended resources to familliarize one's self with the methods in this library are:
