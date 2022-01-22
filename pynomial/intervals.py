@@ -37,7 +37,7 @@ def agresti_coull(x, n, conf=0.95):
 
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
-    p = x/n
+    p = x / n
     ntilde = n + np.power(z, 2)
     ptilde = (x + np.power(z, 2) / 2) / ntilde
 
@@ -122,8 +122,6 @@ def loglog(x, n, conf=0.95):
         Returns:
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
-
-
 
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
