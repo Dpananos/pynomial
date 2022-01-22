@@ -1,17 +1,16 @@
-def _check_arguments(x, n, conf):
+import numpy as np
 
-    if (conf < 0) or (conf > 1):
-        raise ValueError(f"conf should be between 0 and 1 but got {conf}")
+def _check_args(x,n, conf):
 
-    if (not isinstance(x, int)) and (not x.is_integer()):
-        raise ValueError(
-            f"x should be an int datatype or convertable to int but got {x}"
-        )
+    if (isinstance(x, np.ndarray) and not issubclass(x.dtype.type, np.integer)) or (isinstance(x, float) and not x.is_integer()):
+        raise ValueError('x must be an integer or an array of integers')
 
-    if (not isinstance(n, int)) and (not n.is_integer()):
-        raise ValueError(
-            f"n should be an int datatype of convertable to int but got {n}"
-        )
+    elif (isinstance(n, np.ndarray) and not issubclass(n.dtype.type, np.integer)) or (isinstance(n, float) and not n.is_integer()):
+        raise ValueError('n must be an integer or an array of integers')
 
-    if (n < x) or (x < 0) or (n < 0):
-        raise ValueError("n and x should be positive integers with 0<= x <=n")
+    elif np.any(x<0) or np.any(n<x):
+        raise ValueError(f'x must be a non-negative integer less than or equal to n')
+
+    elif np.any(conf<0) or np.any(conf>1):
+        raise ValueError('conf must be a number between 0 and 1')
+
