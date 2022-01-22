@@ -36,7 +36,7 @@ Using pynomial is very straight forward. Each interval function has three common
 from pynomial import wilson
 x = 12
 n = 20
-wilson(x=x, n=n
+wilson(x=x, n=n)
 ```
 
 ```
