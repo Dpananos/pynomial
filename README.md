@@ -1,6 +1,6 @@
 # Pynomial
 
-Pynomial (pronounced like "binomial") is a lightweight python library for implementing the many confidence intervals for the risk parameter of a binomial model.  Pynomial is more or less a python port of the R library [`{binom}`](https://cran.r-project.org/web/packages/binom/binom.pdf) by Sundar Dorai-Raj.
+Pynomial (pronounced like "binomial") is a lightweight python library for implementing the many confidence intervals for the risk parameter of a binomial model.  Pynomial is more or less a python port of the R library [`{binom}`](https://cran.r-project.org/web/packages/binom/binom.pdf) by Sundar Dorai-Raj.  As a point of philosophy and until otherwise stated, if `{binom}` does a thing then so should pynomial (e.g. error throwing or handling cases when the number of successes is the same as the number of trials).
 
 # Features
 
