@@ -2,8 +2,6 @@ import numpy as np
 import pandas as pd
 from scipy.stats import norm, beta, binom
 from scipy.special import expit, logit
-from scipy.optimize import bisect
-
 from .utils import _check_arguments
 
 
@@ -35,9 +33,11 @@ def agresti_coull(x, n, conf=0.95):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
+    _check_arguments(x, n, conf)
+
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
-    p = x/n
+    p = x / n
     ntilde = n + np.power(z, 2)
     ptilde = (x + np.power(z, 2) / 2) / ntilde
 
@@ -91,6 +91,7 @@ def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
+    _check_arguments(x, n, conf)
     if shape_1 < 0 or shape_2 < 0:
         raise ValueError("shape parameters must be positive reals")
 
@@ -123,8 +124,7 @@ def loglog(x, n, conf=0.95):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-
-
+    _check_arguments(x, n, conf)
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
     p = x / n
@@ -157,6 +157,7 @@ def wilson(x, n, conf=0.95):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
+    _check_arguments(x, n, conf)
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
 
@@ -186,6 +187,7 @@ def exact(x, n, conf=0.95):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
+    _check_arguments(x, n, conf)
     alpha = 1 - conf
     p = x / n
     lower = 1 - beta(a=n + 1 - x, b=x).ppf(1 - alpha / 2)
