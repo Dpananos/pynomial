@@ -37,11 +37,12 @@ def agresti_coull(x, n, conf=0.95):
 
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
+    p = x/n
     ntilde = n + np.power(z, 2)
-    p = (x + np.power(z, 2) / 2) / ntilde
+    ptilde = (x + np.power(z, 2) / 2) / ntilde
 
-    upper = p + z * np.sqrt(p * (1 - p) / ntilde)
-    lower = p - z * np.sqrt(p * (1 - p) / ntilde)
+    upper = ptilde + z * np.sqrt(ptilde * (1 - ptilde) / ntilde)
+    lower = ptilde - z * np.sqrt(ptilde * (1 - ptilde) / ntilde)
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Agresti Coull")
 
@@ -74,7 +75,7 @@ def asymptotic(x, n, conf=0.95):
     return interval
 
 
-def bayes(x, n, conf=0.95, shape_1=1, shape_2=1):
+def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5):
 
     """
     Implements a Bayesian model with beta prior on the risk parameter.  Resulting confidence interval is actually an equal tailed posterior credible interval.
@@ -122,7 +123,7 @@ def loglog(x, n, conf=0.95):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-    _check_arguments(x, n, conf)
+
 
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
@@ -131,10 +132,13 @@ def loglog(x, n, conf=0.95):
     radius = z * np.sqrt((1 - p) / (n * p * np.log(p) ** 2))
     theta_lower = theta - radius
     theta_upper = theta + radius
-    lower = np.exp(-np.exp(theta_lower))
-    upper = np.exp(-np.exp(theta_upper))
 
-    interval = _interval(estimate=p, lower=lower, upper=upper, method="Log-Log")
+    # This is not a mistake.  The end points on the log-log scale are permuted with the endpoints
+    # On the natural scale.  See pg. 17 of Lachin 2ed, equation 2.19
+    upper = np.exp(-np.exp(theta_lower))
+    lower = np.exp(-np.exp(theta_upper))
+
+    interval = _interval(estimate=p, lower=lower, upper=upper, method="Cloglog")
 
     return interval
 
