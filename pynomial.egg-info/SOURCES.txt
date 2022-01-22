@@ -1,0 +1,10 @@
+README.md
+setup.py
+pynomial/__init__.py
+pynomial/intervals.py
+pynomial/utils.py
+pynomial.egg-info/PKG-INFO
+pynomial.egg-info/SOURCES.txt
+pynomial.egg-info/dependency_links.txt
+pynomial.egg-info/requires.txt
+pynomial.egg-info/top_level.txt
