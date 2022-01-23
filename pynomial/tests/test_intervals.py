@@ -2,7 +2,7 @@ import pytest
 import pandas as pd
 import numpy as np
 from pynomial.utils import _check_args
-from pynomial.intervals import agresti_coull, asymptotic, bayes, loglog, wilson, exact
+from pynomial.intervals import agresti_coull, asymptotic, bayes, loglog, wilson, exact, logit
 
 binom_results = pd.read_csv("pynomial/tests/binom_output.csv")
 binom_methods = binom_results.groupby(['method'])
@@ -58,6 +58,20 @@ class TestIntervals:
         pynomial_output = loglog(x=x, n=n, conf=conf).values
 
         np.testing.assert_allclose(pynomial_output, target_output)
+
+
+    def test_logit(self):
+
+        results = binom_methods.get_group('logit')
+        x = results.x.values
+        n = results.n.values
+        conf = results.conf.values
+
+        target_output = results.loc[:, ['mean', 'lower','upper']].values
+        pynomial_output = logit(x=x, n=n, conf=conf).values
+
+        np.testing.assert_allclose(pynomial_output, target_output)
+    
     
 
     def test_wilson(self):
