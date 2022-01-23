@@ -2,11 +2,20 @@ Metadata-Version: 2.1
 Name: pynomial
 Version: 0.0.1
 Summary: A python package for binomial confidence intervals
-Home-page: https://github.com/Dpananos/pynomial
-Author: Demetri Panano
-Author-email: dpananos@gmail.com
-License: MIT
-Platform: UNKNOWN
+Home-page: UNKNOWN
+Author: Demetri Pananos
+License: UNKNOWN
+Platform: unix
+Platform: linux
+Platform: osx
+Platform: win32
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
 
 UNKNOWN
 
