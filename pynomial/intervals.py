@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import norm, beta, binom
-from scipy.special import expit, logit
+from scipy.special import expit, logit as log_it
 from .utils import _check_args
 
 
@@ -193,5 +193,35 @@ def exact(x, n, conf=0.95):
     lower = 1 - beta(a=n + 1 - x, b=x).ppf(1 - alpha / 2)
     upper = 1 - beta(a=n - x, b=x + 1).ppf(alpha / 2)
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Exact")
+
+    return interval
+
+
+def logit(x, n, conf=0.95):
+    """
+    Implements logit confidence intervals for the binomial using large sample variance from the Delta method.
+
+        Parameters:
+            x (int or array): An integer or array of integers for the number of positive outcomes
+            n (int or array): An integer or array of integers for the number of trials
+            conf (float): The confidence level desired
+
+        Returns:
+            interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
+    """
+
+
+    _check_args(x, n, conf)
+    alpha = 1 - conf
+    z = norm().ppf(1 - alpha / 2)
+    p = x / n
+    logit_p = log_it(p)
+    logit_var = 1/(n*p*(1-p))
+    radius = z*np.sqrt(logit_var)
+    theta_upper = logit_p + radius
+    theta_lower = logit_p - radius
+    lower = expit(theta_lower)
+    upper = expit(theta_upper)
+    interval = _interval(estimate=p, lower=lower, upper=upper, method="Logit")
 
     return interval

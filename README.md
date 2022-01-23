@@ -18,6 +18,8 @@ The following confidence intervals are implemented:
 
 * The exact interval based on the incomplete beta function.
 
+* The logit based confidence interval with large sample theory variance.
+
 # Installation
 
 You can install pynomial from github using
