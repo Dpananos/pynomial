@@ -5,7 +5,6 @@ from pynomial.utils import _check_args
 from pynomial.intervals import (
     agresti_coull,
     asymptotic,
-    bayes,
     loglog,
     wilson,
     exact,

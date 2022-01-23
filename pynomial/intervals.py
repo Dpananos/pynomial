@@ -210,14 +210,13 @@ def logit(x, n, conf=0.95):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-
     _check_args(x, n, conf)
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
     p = x / n
     logit_p = log_it(p)
-    logit_var = 1/(n*p*(1-p))
-    radius = z*np.sqrt(logit_var)
+    logit_var = 1 / (n * p * (1 - p))
+    radius = z * np.sqrt(logit_var)
     theta_upper = logit_p + radius
     theta_lower = logit_p - radius
     lower = expit(theta_lower)
