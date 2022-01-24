@@ -3,7 +3,7 @@ import pandas as pd
 from scipy.stats import norm, beta, binom, chi2
 from scipy.optimize import newton
 from scipy.special import expit, logit as log_it
-from .utils import _check_args, _lrt_footfinding
+from .utils import _check_args, _lrt_rootfinding
 
 
 def _interval(estimate, lower, upper, method):
@@ -34,7 +34,7 @@ def agresti_coull(x, n, conf=0.95, *args, **kwargs):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-    _check_args(x, n, conf)
+    x, n, conf = _check_args(x, n, conf)
 
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
@@ -64,6 +64,8 @@ def asymptotic(x, n, conf=0.95, *args, **kwargs):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
+    x, n, conf = _check_args(x, n, conf)
+
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
     p = x / n
@@ -92,7 +94,8 @@ def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5, *args, **kwargs):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-    _check_args(x, n, conf)
+    x, n, conf = _check_args(x, n, conf)
+
     if shape_1 < 0 or shape_2 < 0:
         raise ValueError("shape parameters must be positive reals")
 
@@ -125,7 +128,8 @@ def loglog(x, n, conf=0.95, *args, **kwargs):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-    _check_args(x, n, conf)
+    x, n, conf = _check_args(x, n, conf)
+
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
     p = x / n
@@ -158,7 +162,8 @@ def wilson(x, n, conf=0.95, *args, **kwargs):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-    _check_args(x, n, conf)
+    x, n, conf = _check_args(x, n, conf)
+
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
 
@@ -188,7 +193,8 @@ def exact(x, n, conf=0.95, *args, **kwargs):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-    _check_args(x, n, conf)
+    x, n, conf = _check_args(x, n, conf)
+
     alpha = 1 - conf
     p = x / n
     lower = 1 - beta(a=n + 1 - x, b=x).ppf(1 - alpha / 2)
@@ -211,7 +217,8 @@ def logit(x, n, conf=0.95, *args, **kwargs):
             interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
     """
 
-    _check_args(x, n, conf)
+    x, n, conf = _check_args(x, n, conf)
+
     alpha = 1 - conf
     z = norm().ppf(1 - alpha / 2)
     p = x / n
@@ -229,16 +236,27 @@ def logit(x, n, conf=0.95, *args, **kwargs):
 
 def lrt(x, n, conf=0.95, *args, **kwargs):
 
-    _check_args(x, n, conf)
-    p = x/n
+    '''
+    Implements confidence intervals by inverting the Likelihood Ratio Test (LRT).  This method
+    uses root finding procedures via scipy.optimize.newton. Keyword arguments to the 
+    root finding algorithm can be passed via **kwargs.
 
-    # TODO:  This needs to be vectorized still
-    logit_lower, logit_upper = _lrt_rootfinding(x, n, conf)
+    Parameters:
+        x (int or array): An integer or array of integers for the number of positive outcomes
+        n (int or array): An integer or array of integers for the number of trials
+        conf (float): The confidence level desired
+        *args: Not used
+        **kwargs: Keyword arguments passed to scipy.optimize.newton
 
-    lower = expit(logit_lower)
-    upper = expit(logit_upper)
+    Returns:
+        interval (dataframe):  A dataframe housing the risk estimate and upper/lower confidence bounds
+    
+    '''
+
+    x, n, conf = _check_args(x, n, conf)
+    p = x / n
+    lower, upper =  _lrt_rootfinding(x, n, conf)
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="LRT")
 
     return interval
-

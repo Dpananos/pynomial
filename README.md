@@ -23,6 +23,8 @@ The following confidence intervals are implemented:
 
 * The logit based confidence interval with large sample theory variance.
 
+* Intervals based on inversion of the Likelihood Ratio Test.
+
 # Installation
 
 You can install pynomial from github using
