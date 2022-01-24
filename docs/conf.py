@@ -55,4 +55,4 @@ html_theme = 'alabaster'
 html_static_path = ['_static']
 
 # Other options 
-extensions = ['myst_parser']
+# extensions = ['myst_parser']
