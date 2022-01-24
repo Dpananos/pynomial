@@ -77,6 +77,14 @@ class TestErrors:
         with pytest.raises(ValueError):
             _check_args(1, 2, 1.1)
 
+        # Conf=1
+        with pytest.raises(ValueError):
+            _check_args(1, 2, 1)
+
+        # Conf=0
+        with pytest.raises(ValueError):
+            _check_args(1, 2, 0)
+
         # Conf below 0
         with pytest.raises(ValueError):
             _check_args(1, 2, -1)
@@ -118,3 +126,101 @@ class TestErrors:
 
             n = np.array([-1, 0, 1])
             _check_args(1, n, 0.95)
+
+
+class TestShapes():
+
+    def test_no_array_args(self):
+
+        # Check passing arrays and ints works as expected
+        x = 1
+        n = 2
+        conf = 0.95
+        x, n, conf = _check_args(x, n, conf)
+
+        assert x.size == n.size
+        assert x.size == conf.size 
+        assert n.size == conf.size
+
+    def test_one_array_args(self):
+        
+        # Check passing an array for one argument does not raise an error
+        # First x
+        x = np.ones(3)
+        n = 2
+        conf = 0.95
+        x, n, conf = _check_args(x, n, conf)
+
+        assert x.size == n.size
+        assert x.size == conf.size 
+        assert n.size == conf.size
+
+        # Now n
+        x = 1
+        n = 2 * np.ones(3)
+        conf = 0.95
+        x, n, conf = _check_args(x, n, conf)
+
+        assert x.size == n.size
+        assert x.size == conf.size 
+        assert n.size == conf.size
+
+        # Now conf
+
+        x = 1
+        n = 2 
+        conf = 0.95 * np.ones(3)
+        x, n, conf = _check_args(x, n, conf)
+
+        assert x.size == n.size
+        assert x.size == conf.size 
+        assert n.size == conf.size
+
+    def test_two_array_args(self):
+        
+        # Check passing two arrays of the same size yields expected result
+        x = np.ones(3)
+        n = 2 * np.ones(3)
+        conf = 0.95
+        x, n, conf = _check_args(x, n, conf)
+
+        assert x.size == n.size
+        assert x.size == conf.size 
+        assert n.size == conf.size
+
+        x = np.ones(3)
+        n = 2 
+        conf = 0.95 * np.ones(3)
+        x, n, conf = _check_args(x, n, conf)
+
+        assert x.size == n.size
+        assert x.size == conf.size 
+        assert n.size == conf.size
+
+        x = 1
+        n = 2  * np.ones(3)
+        conf = 0.95 * np.ones(3)
+        x, n, conf = _check_args(x, n, conf)
+
+        assert x.size == n.size
+        assert x.size == conf.size 
+        assert n.size == conf.size
+
+    def test_three_array_args(self):
+
+        x = np.ones(3)
+        n = 2 * np.ones(3)
+        conf = 0.95 * np.ones(3)
+        x, n, conf = _check_args(x, n, conf)
+
+        assert x.size == n.size
+        assert x.size == conf.size 
+        assert n.size == conf.size
+
+    def test_mismatch_arg_size(self):
+
+        x = np.ones(4)
+        n = 2 * np.ones(3)
+        conf = 0.95 
+        with pytest.raises(ValueError):
+            x, n, conf = _check_args(x, n, conf)
