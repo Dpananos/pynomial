@@ -1,3 +1,4 @@
+from multiprocessing.managers import ValueProxy
 import pytest
 import pandas as pd
 import numpy as np
@@ -86,25 +87,34 @@ class TestErrors:
             # Successes is a negative number
             _check_args(-1, 1, 0.95)
 
+            # Bad array of successes
+            x = np.array([-1, 0, 1])
+            _check_args(x, 1, 0.95)
+
+        with pytest.raises(ValueError):
+
             # More successes than trials
             _check_args(2, 1, 0.95)
 
             # Successes is a float
             _check_args(1.2, 2, 0.95)
 
-            # Bad array of successes
-            x = np.array([-1, 0, 1])
-            _check_args(x, 1, 0.95)
+
 
     def test_bad_n(self):
 
-        with pytest.raises(ValueError):
-            # trials is a negative number
-            _check_args(1, -1, 0.95)
+        with pytest.raises(TypeError):
 
             # trials is a float
             _check_args(1, 2.5, 0.95)
 
+            # 0 trials
+            _check_args(1, 0, 0.95)
+
+        with pytest.raises(ValueError):
             # Bad array of trials
+                        # trials is a negative number
+            _check_args(1, -1, 0.95)
+
             n = np.array([-1, 0, 1])
             _check_args(1, n, 0.95)
