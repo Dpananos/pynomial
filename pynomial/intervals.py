@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
-from scipy.stats import norm, beta, binom
+from scipy.stats import norm, beta, binom, chi2
+from scipy.optimize import newton
 from scipy.special import expit, logit as log_it
-from .utils import _check_args
+from .utils import _check_args, _lrt_footfinding
 
 
 def _interval(estimate, lower, upper, method):
@@ -19,7 +20,7 @@ def _interval(estimate, lower, upper, method):
     return interval_df
 
 
-def agresti_coull(x, n, conf=0.95):
+def agresti_coull(x, n, conf=0.95, *args, **kwargs):
 
     """
     Implements Agresti-Coull confidence interval for binary outcomes.
@@ -44,12 +45,12 @@ def agresti_coull(x, n, conf=0.95):
     upper = ptilde + z * np.sqrt(ptilde * (1 - ptilde) / ntilde)
     lower = ptilde - z * np.sqrt(ptilde * (1 - ptilde) / ntilde)
 
-    interval = _interval(estimate=p, lower=lower, upper=upper, method="Agresti Coull")
+    interval = _interval(estimate=p, lower=lower, upper=upper, method="Agresti-Coull")
 
     return interval
 
 
-def asymptotic(x, n, conf=0.95):
+def asymptotic(x, n, conf=0.95, *args, **kwargs):
 
     """
     Implements asymptotic confidence interval for binary outocmes derived from the central limit theorem.
@@ -75,7 +76,7 @@ def asymptotic(x, n, conf=0.95):
     return interval
 
 
-def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5):
+def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5, *args, **kwargs):
 
     """
     Implements a Bayesian model with beta prior on the risk parameter.  Resulting confidence interval is actually an equal tailed posterior credible interval.
@@ -110,7 +111,7 @@ def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5):
     return interval
 
 
-def loglog(x, n, conf=0.95):
+def loglog(x, n, conf=0.95, *args, **kwargs):
 
     """
     Implements complimentary log-log interval for binary outcomes.
@@ -143,7 +144,7 @@ def loglog(x, n, conf=0.95):
     return interval
 
 
-def wilson(x, n, conf=0.95):
+def wilson(x, n, conf=0.95, *args, **kwargs):
 
     """
     Implements Wilson score interval for binary outcomes.
@@ -173,7 +174,7 @@ def wilson(x, n, conf=0.95):
     return interval
 
 
-def exact(x, n, conf=0.95):
+def exact(x, n, conf=0.95, *args, **kwargs):
 
     """
     Implements exact confidence intervals for the binomial using results from the incomplete beta function.
@@ -197,7 +198,7 @@ def exact(x, n, conf=0.95):
     return interval
 
 
-def logit(x, n, conf=0.95):
+def logit(x, n, conf=0.95, *args, **kwargs):
     """
     Implements logit confidence intervals for the binomial using large sample variance from the Delta method.
 
@@ -224,3 +225,20 @@ def logit(x, n, conf=0.95):
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Logit")
 
     return interval
+
+
+def lrt(x, n, conf=0.95, *args, **kwargs):
+
+    _check_args(x, n, conf)
+    p = x/n
+
+    # TODO:  This needs to be vectorized still
+    logit_lower, logit_upper = _lrt_rootfinding(x, n, conf)
+
+    lower = expit(logit_lower)
+    upper = expit(logit_upper)
+
+    interval = _interval(estimate=p, lower=lower, upper=upper, method="LRT")
+
+    return interval
+
