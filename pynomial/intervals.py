@@ -5,6 +5,17 @@ from scipy.optimize import newton
 from scipy.special import expit, logit as log_it
 from .utils import _check_args, _lrt_rootfinding
 
+__all__ = [
+    "agresti_coull",
+    "asymptotic",
+    "bayes",
+    "loglog",
+    "wilson",
+    "exact",
+    "logit",
+    "lrt",
+]
+
 
 def _interval(estimate, lower, upper, method):
 
@@ -28,12 +39,12 @@ def agresti_coull(x, n, conf=0.95, *args, **kwargs):
     .. math::
         \\tilde{n}=n+z^{2}
 
-    and 
+    and
 
     .. math::
         \\tilde{p}=\\frac{1}{\widetilde{n}}\left(x+\\frac{z^{2}}{2}\\right)
 
-    The Agresti-Coul interval is then 
+    The Agresti-Coul interval is then
 
     .. math::
         \\tilde{p} \pm z \sqrt{\\tilde{p}(1-\\tilde{p}) \over \\tilde{n}}
@@ -102,7 +113,7 @@ def asymptotic(x, n, conf=0.95, *args, **kwargs):
 def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5, *args, **kwargs):
 
     """
-    Implements a Bayesian model with beta prior on the risk parameter.  Resulting confidence interval is actually an equal tailed posterior credible interval.  
+    Implements a Bayesian model with beta prior on the risk parameter.  Resulting confidence interval is actually an equal tailed posterior credible interval.
 
     Using the prior
 
@@ -118,11 +129,11 @@ def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5, *args, **kwargs):
     The posterior mean is estimated as :math:`(a+x)/(a+b+n)`. The confidence interval is obtained by computing the :math:`\\alpha` and :math:`1-\\alpha` quantiles of the posterior.
 
     .. note::
-    
-        Whereas the binom library implements central and highest density credible intervals, pynomial only
-        implements a central inverval.  
 
-    References: 
+        Whereas the binom library implements central and highest density credible intervals, pynomial only
+        implements a central inverval.
+
+    References:
 
     1. Svensén, Markus, and Christopher M. Bishop. "Pattern recognition and machine learning." (2007).
     """
@@ -150,21 +161,21 @@ def bayes(x, n, conf=0.95, shape_1=0.5, shape_2=0.5, *args, **kwargs):
 def loglog(x, n, conf=0.95, *args, **kwargs):
 
     """
-    Implements complimentary log-log interval for binary outcomes. Given :math:`x` successes in :math:`n` trials, define
+     Implements complimentary log-log interval for binary outcomes. Given :math:`x` successes in :math:`n` trials, define
+
+     .. math::
+         \\theta = g(p) = \log(-\log(p))
+
+     The confidence interval on the loglog scale is
+
+     .. math::
+         \left(\\theta_{L}, \\theta_{U} \\right) = \\theta \pm z \sqrt{\\frac{(1-p)}{n p(\log p)^{2}}}
+
+    Here, :math:`z` is the :math:`1-\\alpha` quantile of a standard normal distribution. Applying :math:`g^{-1}` to each endpoint yields a confidence interval on the original scale.
 
     .. math::
-        \\theta = g(p) = \log(-\log(p))
 
-    The confidence interval on the loglog scale is 
-
-    .. math::
-        \left(\\theta_{L}, \\theta_{U} \\right) = \\theta \pm z \sqrt{\\frac{(1-p)}{n p(\log p)^{2}}}
-
-   Here, :math:`z` is the :math:`1-\\alpha` quantile of a standard normal distribution. Applying :math:`g^{-1}` to each endpoint yields a confidence interval on the original scale.
-
-   .. math::
-
-    \left(p_L , p_R \\right)= \left(\exp \left[ -\exp \left(\\theta_{U} \\right) \\right], \exp \left[ -\exp \left(\\theta_{L} \\right) \\right] \\right)
+     \left(p_L , p_R \\right)= \left(\exp \left[ -\exp \left(\\theta_{U} \\right) \\right], \exp \left[ -\exp \left(\\theta_{L} \\right) \\right] \\right)
 
     """
 
@@ -282,7 +293,7 @@ def lrt(x, n, conf=0.95, *args, **kwargs):
 
     """
     Implements confidence intervals by inverting the Likelihood Ratio Test (LRT).  This method
-    uses root finding procedures via scipy.optimize.newton. Keyword arguments to the 
+    uses root finding procedures via scipy.optimize.newton. Keyword arguments to the
     root finding algorithm can be passed via .
 
     The LRT for a binomial risk parameter is
@@ -296,12 +307,12 @@ def lrt(x, n, conf=0.95, *args, **kwargs):
         \ell( \hat{\\theta}, \\theta^\star) - \chi^2_{1-\\alpha} = 0
 
     Where  :math:`\chi^2_{1-\\alpha}` is the critical value for the LRT.
-    
+
     """
 
     x, n, conf = _check_args(x, n, conf)
     p = x / n
-    lower, upper =  _lrt_rootfinding(x, n, conf)
+    lower, upper = _lrt_rootfinding(x, n, conf)
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="LRT")
 

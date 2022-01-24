@@ -10,7 +10,7 @@ from pynomial.intervals import (
     wilson,
     exact,
     logit,
-    lrt
+    lrt,
 )
 
 

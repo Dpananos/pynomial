@@ -73,7 +73,9 @@ def _lrt_rootfinding(x, n, conf, *args, **kwargs):
         # Perform the root finding in the log odds space
         # Then, transform back to probability space
         lrt_stat = (
-            lambda logit_p: -2 * (binom(n=ni, p=expit(logit_p)).logpmf(xi) - log_lik_est) - X
+            lambda logit_p: -2
+            * (binom(n=ni, p=expit(logit_p)).logpmf(xi) - log_lik_est)
+            - X
         )
 
         logit_lower[i] = newton(lrt_stat, x0=logit(p) - 2, **kwargs)
