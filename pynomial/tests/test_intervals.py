@@ -1,4 +1,3 @@
-from multiprocessing.managers import ValueProxy
 import pytest
 import pandas as pd
 import numpy as np
@@ -67,7 +66,8 @@ class TestIntervals(BaseIntervalTest):
     def test_lrt(self):
 
         x, n, conf, target_output = self.get_binom_results("lrt")
-        pynomial_output = lrt(x=x, n=n, conf=conf).values
+        eps = np.finfo(float).eps
+        pynomial_output = lrt(x=x, n=n, conf=conf, maxiter=100_000, rtol=np.sqrt(eps)).values
 
         # There seems to be a small discrepency between R and python for this test
         # Probably something in log-lik evaluation.

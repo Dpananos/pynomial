@@ -14,6 +14,7 @@ Welcome to pynomial's documentation!
    :caption: Contents:
 
    quickstart
+   interval_info
    apidocs
 
 Indices and tables
