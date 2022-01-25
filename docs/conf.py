@@ -60,5 +60,6 @@ html_static_path = ['_static']
 # extensions = ['myst_parser']
 extensions = [ 'sphinx.ext.autodoc',
                'sphinx.ext.doctest',
-               'sphinx.ext.intersphinx'
+               'sphinx.ext.intersphinx',
+               'sphinx.ext.napoleon'
               ]
