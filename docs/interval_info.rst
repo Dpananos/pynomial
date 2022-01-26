@@ -32,7 +32,7 @@ Asymptotic
 
 Large sample theory says that as :math:`n \to \infty` then
 
-    .. math:
+    .. math::
         p \overset{d}{\sim} \mathcal{N}\left(\pi, {\pi(1-\pi)\over n}\right)
 
 Here, :math:`\pi` is the true value of the risk.  From this fact, together with use of Slutsky's convergence theorem, the asymptotic confidence interval can be derived as
