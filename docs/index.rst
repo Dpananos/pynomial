@@ -6,7 +6,9 @@
 Welcome to pynomial's documentation!
 ====================================
 
-**Pynomial** is a lightweight python library for implementing the many condifence intervals for the binomial risk parameter. Pynomial is more or less a python port of the R library *{binom}* by Sundar Dorai-Raj.  The clas
+**Pynomial** is a lightweight python library for implementing the many condifence intervals for the binomial risk parameter. Pynomial is more or less a python port of the R library *{binom}* by Sundar Dorai-Raj.  
+
+The classic confidence interval for a binomial risk parameter (implemented by the `pynomial.intervals.asymptotic`) is not bounded by (0, 1).  This means that for small samples, or for risks close to 0 or 1, the confidence interval may exceed 0 or 1.  To ameliorate this, may alternative confidence intervals have been proposed.
 
 
 .. toctree::
