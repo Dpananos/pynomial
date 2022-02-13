@@ -37,11 +37,11 @@ def _check_args(x, n, conf):
 
     max_len = max(x.size, n.size, conf.size)
 
-    if x.size < max_len:
+    if x.size <= max_len:
         x = np.ones(max_len) * x
-    if n.size < max_len:
+    if n.size <= max_len:
         n = np.ones(max_len) * n
-    if conf.size < max_len:
+    if conf.size <= max_len:
         conf = np.ones(max_len) * conf
 
     return x, n, conf
@@ -84,3 +84,26 @@ def _lrt_rootfinding(x, n, conf, *args, **kwargs):
     upper = expit(logit_upper)
 
     return lower, upper
+
+
+def all_no_events(x, n, alpha, p, lower, upper):
+
+    '''
+    Returns a one sided confidence interval in cases where there are
+    no events (x=0) or all events (x=0).  Automatically changes the estimated
+    risk, as well as lower and upper bounds.
+    '''
+
+    no_events = x==0
+    all_events = x==n
+
+    p[no_events] = 0
+    p[all_events] = 1
+
+    lower[no_events] = 0
+    upper[no_events] = 1 - np.power(alpha[no_events], 1/n[no_events])
+
+    lower[all_events] = np.power(alpha[all_events], 1/n[all_events])
+    upper[all_events] = 1
+
+    return p, lower, upper
