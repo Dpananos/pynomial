@@ -2,7 +2,7 @@ from tkinter import N
 import pytest
 import pandas as pd
 import numpy as np
-from pynomial.utils import _check_args, _all_no_events
+from pynomial.utils import _check_args
 
 
 class TestShapes:
