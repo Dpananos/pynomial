@@ -67,7 +67,9 @@ class TestIntervals(BaseIntervalTest):
 
         x, n, conf, target_output = self.get_binom_results("lrt")
         eps = np.finfo(float).eps
-        pynomial_output = lrt(x=x, n=n, conf=conf, maxiter=100_000, rtol=np.sqrt(eps)).values
+        pynomial_output = lrt(
+            x=x, n=n, conf=conf, maxiter=100_000, rtol=np.sqrt(eps)
+        ).values
 
         # There seems to be a small discrepency between R and python for this test
         # Probably something in log-lik evaluation.

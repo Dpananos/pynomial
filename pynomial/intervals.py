@@ -60,13 +60,13 @@ def agresti_coull(x, n, conf=0.95, *args, **kwargs):
     upper = ptilde + z * np.sqrt(ptilde * (1 - ptilde) / ntilde)
 
     lower = ptilde - z * np.sqrt(ptilde * (1 - ptilde) / ntilde)
-    
-    # Return one sided intervals in cases of 0 or n events
-    upper[x==0] = 1 - np.power(alpha[x==0], 1/n[x==0])
-    upper[x==n] = 1
 
-    lower[x==0] = 0
-    lower[x==n] = np.power(alpha[x==n], 1/n[x==n])
+    # Return one sided intervals in cases of 0 or n events
+    upper[x == 0] = 1 - np.power(alpha[x == 0], 1 / n[x == 0])
+    upper[x == n] = 1
+
+    lower[x == 0] = 0
+    lower[x == n] = np.power(alpha[x == n], 1 / n[x == n])
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Agresti-Coull")
 
@@ -98,11 +98,11 @@ def asymptotic(x, n, conf=0.95, *args, **kwargs):
     upper = p + z * np.sqrt(asymptotic_var)
 
     # Return one sided intervals in cases of 0 or n events
-    upper[x==0] = 1 - np.power(alpha[x==0], 1/n[x==0])
-    upper[x==n] = 1
+    upper[x == 0] = 1 - np.power(alpha[x == 0], 1 / n[x == 0])
+    upper[x == n] = 1
 
-    lower[x==0] = 0
-    lower[x==n] = np.power(alpha[x==n], 1/n[x==n])
+    lower[x == 0] = 0
+    lower[x == n] = np.power(alpha[x == n], 1 / n[x == n])
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Asymptotic")
 
@@ -175,11 +175,11 @@ def loglog(x, n, conf=0.95, *args, **kwargs):
     lower = np.exp(-np.exp(theta_upper))
 
     # Return one sided intervals in cases of 0 or n events
-    upper[x==0] = 1 - np.power(alpha[x==0], 1/n[x==0])
-    upper[x==n] = 1
+    upper[x == 0] = 1 - np.power(alpha[x == 0], 1 / n[x == 0])
+    upper[x == n] = 1
 
-    lower[x==0] = 0
-    lower[x==n] = np.power(alpha[x==n], 1/n[x==n])
+    lower[x == 0] = 0
+    lower[x == n] = np.power(alpha[x == n], 1 / n[x == n])
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Cloglog")
 
@@ -213,11 +213,11 @@ def wilson(x, n, conf=0.95, *args, **kwargs):
     upper = center + radius
 
     # Return one sided intervals in cases of 0 or n events
-    upper[x==0] = 1 - np.power(alpha[x==0], 1/n[x==0])
-    upper[x==n] = 1
+    upper[x == 0] = 1 - np.power(alpha[x == 0], 1 / n[x == 0])
+    upper[x == n] = 1
 
-    lower[x==0] = 0
-    lower[x==n] = np.power(alpha[x==n], 1/n[x==n])
+    lower[x == 0] = 0
+    lower[x == n] = np.power(alpha[x == n], 1 / n[x == n])
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Wilson")
 
@@ -246,8 +246,8 @@ def exact(x, n, conf=0.95, *args, **kwargs):
     upper = 1 - beta(a=n - x, b=x + 1).ppf(alpha / 2)
 
     # One sided interval
-    lower[x==0] = 0
-    upper[x==n] = 1
+    lower[x == 0] = 0
+    upper[x == n] = 1
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Exact")
 
@@ -282,11 +282,11 @@ def logit(x, n, conf=0.95, *args, **kwargs):
     upper = expit(theta_upper)
 
     # Return one sided intervals in cases of 0 or n events
-    upper[x==0] = 1 - np.power(alpha[x==0], 1/n[x==0])
-    upper[x==n] = 1
+    upper[x == 0] = 1 - np.power(alpha[x == 0], 1 / n[x == 0])
+    upper[x == n] = 1
 
-    lower[x==0] = 0
-    lower[x==n] = np.power(alpha[x==n], 1/n[x==n])
+    lower[x == 0] = 0
+    lower[x == n] = np.power(alpha[x == n], 1 / n[x == n])
 
     interval = _interval(estimate=p, lower=lower, upper=upper, method="Logit")
 

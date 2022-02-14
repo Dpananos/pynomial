@@ -71,9 +71,7 @@ def _lrt_rootfinding(x, n, conf, *args, **kwargs):
 
         lrt_stat = lambda pp: -2 * (binom(n=ni, p=pp).logpmf(xi) - log_lik_est) - X
 
-    
-        lower[i] = 0 if xi==0 else newton(lrt_stat, x0=1e-3, **kwargs)
-        upper[i] = 1 if xi==ni else newton(lrt_stat, x0=1-1e-3, **kwargs)
-
+        lower[i] = 0 if xi == 0 else newton(lrt_stat, x0=1e-3, **kwargs)
+        upper[i] = 1 if xi == ni else newton(lrt_stat, x0=1 - 1e-3, **kwargs)
 
     return lower, upper
