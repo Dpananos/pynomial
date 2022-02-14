@@ -149,9 +149,9 @@ class TestShapes:
         conf = 0.95
         x, n, conf = _check_args(x, n, conf)
 
-        assert x.size == n.size
-        assert x.size == conf.size
-        assert n.size == conf.size
+        assert len(x) == len(n)
+        assert len(x) == len(conf)
+        assert len(n) == len(conf)
 
     def test_one_array_args(self):
 
@@ -162,9 +162,9 @@ class TestShapes:
         conf = 0.95
         x, n, conf = _check_args(x, n, conf)
 
-        assert x.size == n.size
-        assert x.size == conf.size
-        assert n.size == conf.size
+        assert len(x) == len(n)
+        assert len(x) == len(conf)
+        assert len(n) == len(conf)
 
         # Now n
         x = 1
@@ -172,9 +172,9 @@ class TestShapes:
         conf = 0.95
         x, n, conf = _check_args(x, n, conf)
 
-        assert x.size == n.size
-        assert x.size == conf.size
-        assert n.size == conf.size
+        assert len(x) == len(n)
+        assert len(x) == len(conf)
+        assert len(n) == len(conf)
 
         # Now conf
 
@@ -183,9 +183,9 @@ class TestShapes:
         conf = 0.95 * np.ones(3)
         x, n, conf = _check_args(x, n, conf)
 
-        assert x.size == n.size
-        assert x.size == conf.size
-        assert n.size == conf.size
+        assert len(x) == len(n)
+        assert len(x) == len(conf)
+        assert len(n) == len(conf)
 
     def test_two_array_args(self):
 
@@ -195,27 +195,27 @@ class TestShapes:
         conf = 0.95
         x, n, conf = _check_args(x, n, conf)
 
-        assert x.size == n.size
-        assert x.size == conf.size
-        assert n.size == conf.size
+        assert len(x) == len(n)
+        assert len(x) == len(conf)
+        assert len(n) == len(conf)
 
         x = np.ones(3)
         n = 2
         conf = 0.95 * np.ones(3)
         x, n, conf = _check_args(x, n, conf)
 
-        assert x.size == n.size
-        assert x.size == conf.size
-        assert n.size == conf.size
+        assert len(x) == len(n)
+        assert len(x) == len(conf)
+        assert len(n) == len(conf)
 
         x = 1
         n = 2 * np.ones(3)
         conf = 0.95 * np.ones(3)
         x, n, conf = _check_args(x, n, conf)
 
-        assert x.size == n.size
-        assert x.size == conf.size
-        assert n.size == conf.size
+        assert len(x) == len(n)
+        assert len(x) == len(conf)
+        assert len(n) == len(conf)
 
     def test_three_array_args(self):
 
@@ -224,9 +224,9 @@ class TestShapes:
         conf = 0.95 * np.ones(3)
         x, n, conf = _check_args(x, n, conf)
 
-        assert x.size == n.size
-        assert x.size == conf.size
-        assert n.size == conf.size
+        assert len(x) == len(n)
+        assert len(x) == len(conf)
+        assert len(n) == len(conf)
 
     def test_mismatch_arg_size(self):
 
