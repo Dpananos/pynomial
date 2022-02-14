@@ -79,3 +79,7 @@ Many textbooks have their own treatment of binomial random variables and confide
 
 * Brown, Lawrence D., T. Tony Cai, and Anirban DasGupta. *Confidence intervals for a binomial proportion and asymptotic expansions.* The Annals of Statistics 30.1 (2002): 160-201.
 
+
+# TO DO:
+
+ - I still need to implement one sided intervals for each function.  R's `{binom}` has some functions which naturally return a one sided interval (like LRT) and others which do not (like Agresti-Coul).  
