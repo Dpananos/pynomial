@@ -37,11 +37,11 @@ def _check_args(x, n, conf):
 
     max_len = max(x.size, n.size, conf.size)
 
-    if x.size < max_len:
+    if x.size <= max_len:
         x = np.ones(max_len) * x
-    if n.size < max_len:
+    if n.size <= max_len:
         n = np.ones(max_len) * n
-    if conf.size < max_len:
+    if conf.size <= max_len:
         conf = np.ones(max_len) * conf
 
     return x, n, conf
