@@ -58,11 +58,11 @@ def _lrt_rootfinding(x, n, conf, *args, **kwargs):
     # x, n, conf are all arrays of the same size when passed to this function
     # For each triplet, we will estimate the upper and lower endpoints on the logit scale
     # for numerical stability.
-    data = np.c_[x, n, conf]
-    logit_lower = np.zeros(len(data))
-    logit_upper = np.zeros(len(data))
 
-    for i, (xi, ni, confi) in enumerate(data):
+    lower = np.zeros_like(x)
+    upper = np.zeros_like(x)
+
+    for i, (xi, ni, confi) in enumerate(zip(x, n, conf)):
         p = xi / ni
         alpha = 1 - confi
         X = chi2(df=1).ppf(1 - alpha)
@@ -77,10 +77,12 @@ def _lrt_rootfinding(x, n, conf, *args, **kwargs):
             * (binom(n=ni, p=expit(logit_p)).logpmf(xi) - log_lik_est)
             - X
         )
+    
+        # TODO: Need some logic for one sided intervals.
+        logit_lower = newton(lrt_stat, x0=logit(p) - 2, **kwargs)
+        lower[i] = expit(logit_lower)
 
-        logit_lower[i] = newton(lrt_stat, x0=logit(p) - 2, **kwargs)
-        logit_upper[i] = newton(lrt_stat, x0=logit(p) + 2, **kwargs)
-    lower = expit(logit_lower)
-    upper = expit(logit_upper)
+        logit_upper = newton(lrt_stat, x0=logit(p) + 2, **kwargs)
+        upper[i] = expit(logit_upper)
 
     return lower, upper
