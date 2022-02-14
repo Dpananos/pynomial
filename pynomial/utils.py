@@ -69,20 +69,11 @@ def _lrt_rootfinding(x, n, conf, *args, **kwargs):
 
         log_lik_est = binom(n=ni, p=p).logpmf(xi)
 
-        # For numerically stable reasons, we pass logit p to the log likelihood and
-        # Perform the root finding in the log odds space
-        # Then, transform back to probability space
-        lrt_stat = (
-            lambda logit_p: -2
-            * (binom(n=ni, p=expit(logit_p)).logpmf(xi) - log_lik_est)
-            - X
-        )
-    
-        # TODO: Need some logic for one sided intervals.
-        logit_lower = newton(lrt_stat, x0=logit(p) - 2, **kwargs)
-        lower[i] = expit(logit_lower)
+        lrt_stat = lambda pp: -2 * (binom(n=ni, p=pp).logpmf(xi) - log_lik_est) - X
 
-        logit_upper = newton(lrt_stat, x0=logit(p) + 2, **kwargs)
-        upper[i] = expit(logit_upper)
+    
+        lower[i] = 0 if xi==0 else newton(lrt_stat, x0=1e-3, **kwargs)
+        upper[i] = 1 if xi==ni else newton(lrt_stat, x0=1-1e-3, **kwargs)
+
 
     return lower, upper
