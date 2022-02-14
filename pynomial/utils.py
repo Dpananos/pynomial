@@ -31,8 +31,8 @@ def _check_args(x, n, conf):
         raise ValueError("conf must be a number between 0 and 1")
 
     # Ensure that x, n, and conf are arrays of the same dimension
-    lens = np.unique((x.size, n.size, conf.size))
-    if len(lens) > 2:
+    input_sizes = np.unique((x.size, n.size, conf.size))
+    if len(input_sizes) > 2:
         raise ValueError("If passing arrays as arguments, arrays must be same length")
 
     max_len = max(x.size, n.size, conf.size)
