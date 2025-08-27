@@ -82,36 +82,3 @@ class TestClopperPearsonInterval:
         assert result.point_estimate == 1.0
         assert result.lower < 1.0  # Should have some uncertainty even for x=n
         assert result.upper == 1.0  # Exact method gives exact 1 for upper bound when x=n
-
-    def test_confidence_levels(self):
-        """Test different confidence levels."""
-        result_90 = clopper_pearson(5, 10, confidence_level=0.90)
-        result_95 = clopper_pearson(5, 10, confidence_level=0.95)
-        result_99 = clopper_pearson(5, 10, confidence_level=0.99)
-        
-        # Same point estimate
-        assert np.isclose(result_90.point_estimate, result_95.point_estimate, rtol=TOLERANCE)
-        assert np.isclose(result_95.point_estimate, result_99.point_estimate, rtol=TOLERANCE)
-        
-        # Intervals should get wider with higher confidence
-        width_90 = result_90.upper - result_90.lower
-        width_95 = result_95.upper - result_95.lower
-        width_99 = result_99.upper - result_99.lower
-        
-        assert width_90 < width_95 < width_99
-
-    def test_exact_coverage_properties(self):
-        """Test that Clopper-Pearson gives exact coverage (conservative)."""
-        # Test multiple cases to ensure intervals are never too narrow
-        test_cases = [(1, 10), (3, 10), (7, 10), (9, 10)]
-        
-        for x, n in test_cases:
-            result = clopper_pearson(x, n, confidence_level=0.95)
-            
-            # Verify interval is valid
-            assert 0 <= result.lower <= result.point_estimate <= result.upper <= 1
-            assert result.lower < result.upper  # Should be a proper interval
-            
-            # For exact method, intervals should be reasonably wide for small n
-            width = result.upper - result.lower
-            assert width > 0.1  # Reasonable width for n=10

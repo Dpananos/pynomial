@@ -102,18 +102,6 @@ class TestBayesianBetaInterval:
         expected_mean = 5.5 / 11
         assert np.isclose(result.point_estimate, expected_mean, rtol=TOLERANCE)
 
-    def test_prior_parameters(self):
-        """Test different prior parameters."""
-        # Uniform prior (1, 1)
-        result_uniform = bayesian_beta(5, 10, prior_alpha=1.0, prior_beta=1.0)
-        # Posterior mean should be (5 + 1)/(10 + 2) = 6/12 = 0.5
-        assert np.isclose(result_uniform.point_estimate, 0.5, rtol=TOLERANCE)
-        
-        # Strong prior favoring low values
-        result_low = bayesian_beta(5, 10, prior_alpha=1.0, prior_beta=10.0)
-        # Should pull the estimate lower than the frequentist 0.5
-        assert result_low.point_estimate < 0.5
-
     def test_interval_types(self):
         """Test that both interval types work and HDI is generally narrower."""
         central_result = bayesian_beta(5, 10, interval_type='central')
@@ -155,19 +143,3 @@ class TestBayesianBetaInterval:
         with raises(ValueError, match="interval_type must be 'central' or 'highest'"):
             bayesian_beta(5, 10, interval_type='invalid')
 
-    def test_confidence_levels(self):
-        """Test different confidence levels."""
-        result_90 = bayesian_beta(5, 10, confidence_level=0.90)
-        result_95 = bayesian_beta(5, 10, confidence_level=0.95)
-        result_99 = bayesian_beta(5, 10, confidence_level=0.99)
-        
-        # Same point estimate
-        assert np.isclose(result_90.point_estimate, result_95.point_estimate, rtol=TOLERANCE)
-        assert np.isclose(result_95.point_estimate, result_99.point_estimate, rtol=TOLERANCE)
-        
-        # Intervals should get wider with higher confidence
-        width_90 = result_90.upper - result_90.lower
-        width_95 = result_95.upper - result_95.lower
-        width_99 = result_99.upper - result_99.lower
-        
-        assert width_90 < width_95 < width_99

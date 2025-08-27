@@ -13,6 +13,9 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.4.1",
+    "sphinx>=8.2.3",
+    "sphinx-autodoc-typehints>=3.2.0",
+    "sphinx-rtd-theme>=3.0.2",
 ]
 
 [tool.pytest.ini_options]
@@ -23,5 +26,7 @@ markers = [
     "bayesian_beta: marks tests as bayesian beta confidence interval tests",
     "clopper_pearson: marks tests as clopper-pearson (exact) confidence interval tests",
     "logit: marks tests as logit transformation confidence interval tests",
+    "wilson: marks tests as wilson score confidence interval tests",
+    "arcsine: marks tests as arcsine tests",
     "validation: marks tests as validation tests",
 ]
