@@ -21,5 +21,7 @@ markers = [
     "cloglog: marks tests as cloglog confidence interval tests",
     "agresti_coull: marks tests as agresti-coull confidence interval tests",
     "bayesian_beta: marks tests as bayesian beta confidence interval tests",
+    "clopper_pearson: marks tests as clopper-pearson (exact) confidence interval tests",
+    "logit: marks tests as logit transformation confidence interval tests",
     "validation: marks tests as validation tests",
 ]

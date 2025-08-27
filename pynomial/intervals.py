@@ -277,10 +277,33 @@ def bayesian_beta(
 def clopper_pearson(
     x: int, n: int, confidence_level: float = 0.95
 ) -> ConfidenceInterval:
+    """
+    Clopper-Pearson exact confidence interval for binomial proportions.
+    
+    This method provides exact coverage by using the beta distribution relationship
+    to the binomial distribution. The confidence interval is:
+    
+    lower = Beta((1-α)/2; x, n-x+1)
+    upper = Beta(1-(1-α)/2; x+1, n-x)
+    
+    Special cases:
+    - When x=0: lower = 0
+    - When x=n: upper = 1
+    """
     _check_inputs(x, n, confidence_level)
     pe = x / n
-    lower = stats.beta.ppf((1 - confidence_level) / 2, x, n - x + 1)
-    upper = stats.beta.ppf(1 - (1 - confidence_level) / 2, x + 1, n - x)
+    alpha = 1 - confidence_level
+    
+    # Handle edge cases
+    if x == 0:
+        lower = 0.0
+        upper = stats.beta.ppf(1 - alpha / 2, x + 1, n - x)
+    elif x == n:
+        lower = stats.beta.ppf(alpha / 2, x, n - x + 1)
+        upper = 1.0
+    else:
+        lower = stats.beta.ppf(alpha / 2, x, n - x + 1)
+        upper = stats.beta.ppf(1 - alpha / 2, x + 1, n - x)
 
     return ConfidenceInterval(
         type=ConfidenceIntervalType.CLOPPER_PEARSON,
@@ -356,14 +379,44 @@ def wilson(x: int, n: int, correct_continuity: bool = True, confidence_level: fl
         return _wilson_no_continuity(x, n, confidence_level)
 
 def logit(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
+    """
+    Logit transformation confidence interval for binomial proportions.
+    
+    This method uses the logit transformation:
+    1. Transform p to logit scale: logit(p) = ln(p/(1-p))
+    2. Calculate CI on logit scale using normal approximation  
+    3. Transform back to probability scale using inverse logit
+    
+    Special cases:
+    - When x=0: lower = 0, upper calculated using continuity correction
+    - When x=n: upper = 1, lower calculated using continuity correction
+    """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
     pe = x / n
-    standard_error = np.sqrt(1 / (n * pe * (1 - pe)))
-    logit_lower = pe - z_score * standard_error
-    logit_upper = pe + z_score * standard_error
-    lower = np.exp(logit_lower) / (1 + np.exp(logit_lower))
-    upper = np.exp(logit_upper) / (1 + np.exp(logit_upper))
+    
+    # Handle edge cases like R's implementation
+    # R's binom.logit falls back to exact (Clopper-Pearson) for edge cases
+    if x == 0:
+        lower = 0.0
+        # Use exact upper bound like Clopper-Pearson
+        upper = stats.beta.ppf(1 - (1 - confidence_level) / 2, x + 1, n - x)
+        
+    elif x == n:
+        # Use exact lower bound like Clopper-Pearson  
+        lower = stats.beta.ppf((1 - confidence_level) / 2, x, n - x + 1)
+        upper = 1.0
+        
+    else:
+        # Standard logit transformation
+        logit_pe = np.log(pe / (1 - pe))
+        standard_error = np.sqrt(1 / (n * pe * (1 - pe)))
+        
+        logit_lower = logit_pe - z_score * standard_error
+        logit_upper = logit_pe + z_score * standard_error
+        
+        lower = np.exp(logit_lower) / (1 + np.exp(logit_lower))
+        upper = np.exp(logit_upper) / (1 + np.exp(logit_upper))
 
     return ConfidenceInterval(
         type=ConfidenceIntervalType.LOGIT,
