@@ -26,6 +26,99 @@ def _z_score(confidence_level: float = 0.95) -> float:
     return stats.norm.ppf(1 - (1 - confidence_level) / 2)
 
 
+def _highest_density_interval_beta(a: float, b: float, confidence_level: float, tol: float = 1e-8, max_iter: int = 1000) -> tuple[float, float]:
+    """
+    Compute highest posterior density interval for Beta distribution.
+    
+    This implements the algorithm from R's binom package C code.
+    """
+    alpha = 1 - confidence_level
+    
+    # Initial bounds using equal-tailed interval
+    lcl = stats.beta.ppf(alpha / 2, a, b)
+    ucl = stats.beta.ppf(1 - alpha / 2, a, b)
+    
+    # Get densities at initial bounds
+    lcl_density = stats.beta.pdf(lcl, a, b)
+    ucl_density = stats.beta.pdf(ucl, a, b)
+    
+    # Find the mode
+    if a > 1 and b > 1:
+        mode = (a - 1) / (a + b - 2)
+    elif a <= 1 and b > 1:
+        mode = 0.0
+    elif a > 1 and b <= 1:
+        mode = 1.0
+    else:
+        mode = 0.5  # a <= 1 and b <= 1
+    
+    # Start with the higher density
+    target_density = max(lcl_density, ucl_density)
+    y1 = 0.0
+    y3 = target_density
+    
+    # Determine search direction based on which bound has higher density
+    first_is_upper = lcl_density < ucl_density
+    
+    # Binary search for the density level that gives the right coverage
+    for i in range(max_iter):
+        y2 = (y1 + y3) / 2
+        
+        # Find interval bounds for this density level
+        try:
+            # Find where beta density equals y2
+            if first_is_upper:
+                # Search for lower bound
+                lcl_new = _find_beta_density_root(a, b, y2, 0.0, mode, tol)
+                ucl_new = _find_beta_density_root(a, b, y2, mode, 1.0, tol)
+            else:
+                # Search for upper bound  
+                lcl_new = _find_beta_density_root(a, b, y2, 0.0, mode, tol)
+                ucl_new = _find_beta_density_root(a, b, y2, mode, 1.0, tol)
+            
+            # Calculate coverage
+            coverage = stats.beta.cdf(ucl_new, a, b) - stats.beta.cdf(lcl_new, a, b)
+            
+            if abs(coverage - confidence_level) < tol:
+                return lcl_new, ucl_new
+                
+            if coverage > confidence_level:
+                y1 = y2  # Need higher density (smaller interval)
+            else:
+                y3 = y2  # Need lower density (larger interval)
+                
+        except (ValueError, RuntimeError):
+            # If root finding fails, fall back to equal-tailed
+            break
+    
+    # Fallback to equal-tailed interval if HDI computation fails
+    lcl = stats.beta.ppf(alpha / 2, a, b)
+    ucl = stats.beta.ppf(1 - alpha / 2, a, b)
+    return lcl, ucl
+
+
+def _find_beta_density_root(a: float, b: float, target_density: float, x_lower: float, x_upper: float, tol: float) -> float:
+    """Find x such that beta.pdf(x, a, b) = target_density using Brent's method."""
+    from scipy.optimize import brentq
+    
+    def density_diff(x):
+        return stats.beta.pdf(x, a, b) - target_density
+    
+    try:
+        # Check if root exists in interval
+        if density_diff(x_lower) * density_diff(x_upper) > 0:
+            # No sign change, return the endpoint with density closest to target
+            if abs(density_diff(x_lower)) < abs(density_diff(x_upper)):
+                return x_lower
+            else:
+                return x_upper
+        
+        return brentq(density_diff, x_lower, x_upper, xtol=tol)
+    except ValueError:
+        # Return midpoint if optimization fails
+        return (x_lower + x_upper) / 2
+
+
 def _check_inputs(x, n, confidence_level: float = 0.95):
     # Check for None
     if x is None or n is None:
@@ -109,16 +202,68 @@ def arcsine(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
 def bayesian_beta(
     x: int,
     n: int,
-    prior_alpha: float = 1,
-    prior_beta: float = 1,
+    prior_alpha: float = 0.5,
+    prior_beta: float = 0.5,
     confidence_level: float = 0.95,
+    interval_type: str = "central",
+    tol: float = 1e-8,
+    max_iter: int = 1000,
 ) -> ConfidenceInterval:
+    """
+    Bayesian confidence interval using Beta prior.
+    
+    Based on R's binom.bayes function from the binom package.
+    
+    Args:
+        x: Number of successes
+        n: Number of trials
+        prior_alpha: Prior alpha parameter (shape1), default 0.5 (Jeffreys prior)
+        prior_beta: Prior beta parameter (shape2), default 0.5 (Jeffreys prior)
+        confidence_level: Confidence level
+        interval_type: Either "central" (equal-tailed) or "highest" (highest density interval)
+        tol: Tolerance for convergence (used for highest density intervals)
+        max_iter: Maximum iterations for convergence
+    """
     _check_inputs(x, n, confidence_level)
-    posterior = stats.beta(prior_alpha + x, prior_beta + n - x)
-    posterior_mean = (prior_alpha + x) / (prior_alpha + prior_beta + n)
-    lower = posterior.ppf((1 - confidence_level) / 2)
-    upper = posterior.ppf(1 - (1 - confidence_level) / 2)
-
+    
+    if prior_alpha <= 0 or prior_beta <= 0:
+        raise ValueError("prior_alpha and prior_beta must be greater than 0")
+        
+    if interval_type not in ["central", "highest"]:
+        raise ValueError("interval_type must be 'central' or 'highest'")
+    
+    # Posterior parameters
+    a = x + prior_alpha
+    b = n - x + prior_beta
+    
+    # Posterior mean
+    posterior_mean = a / (a + b)
+    
+    # Calculate confidence interval
+    alpha = 1 - confidence_level
+    
+    # Handle edge cases following R's binom.bayes implementation
+    if x == 0:
+        lower = 0.0
+        if interval_type == "central":
+            upper = stats.beta.ppf(1 - alpha, a, b)
+        else:  # highest density
+            upper = stats.beta.ppf(1 - alpha, a, b)
+    elif x == n:
+        upper = 1.0
+        if interval_type == "central":
+            lower = stats.beta.ppf(alpha, a, b)
+        else:  # highest density
+            lower = stats.beta.ppf(alpha, a, b)
+    else:
+        if interval_type == "central":
+            # Equal-tailed interval
+            lower = stats.beta.ppf(alpha / 2, a, b)
+            upper = stats.beta.ppf(1 - alpha / 2, a, b)
+        else:
+            # Highest posterior density interval
+            lower, upper = _highest_density_interval_beta(a, b, confidence_level, tol, max_iter)
+    
     return ConfidenceInterval(
         type=ConfidenceIntervalType.BAYESIAN_BETA,
         confidence_level=confidence_level,
@@ -126,6 +271,7 @@ def bayesian_beta(
         lower=lower,
         upper=upper,
     )
+
 
 
 def clopper_pearson(
