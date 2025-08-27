@@ -4,18 +4,6 @@ version = "0.1.0"
 description = "Python library for binomial proportion confidence intervals"
 readme = "README.md"
 requires-python = ">=3.12"
-authors = [
-    {name = "Demetri Pananos", email = "demetri.pananos@example.com"}
-]
-keywords = ["statistics", "confidence intervals", "binomial", "proportions"]
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License", 
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Scientific/Engineering :: Mathematics",
-]
 dependencies = [
     "ipython>=9.4.0",
     "numpy>=2.3.2",
@@ -25,15 +13,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.4.1",
-    "scipy-stubs>=1.16.1.1",
-    "sphinx>=8.2.3",
-    "sphinx-autodoc-typehints>=3.2.0",
-    "sphinx-rtd-theme>=3.0.2",
-]
-docs = [
-    "sphinx>=8.2.3",
-    "sphinx-rtd-theme>=3.0.2", 
-    "sphinx-autodoc-typehints>=3.2.0",
+    "scipy-stubs>=1.16.1.1"
 ]
 
 [tool.pytest.ini_options]
