@@ -6,30 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>pynomial documentation &#8212; pynomial  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=34905f61" />
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-
-  
-  
-
+    <link rel="search" title="Search" href="search.html" /> 
   </head><body>
-  
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pynomial  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pynomial documentation</a></li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <section id="pynomial-documentation">
@@ -37,206 +39,56 @@
 <p>Welcome to pynomial’s documentation! This package provides various confidence interval
 methods for binomial proportions.</p>
 </section>
+<section id="rationale-and-background">
+<h1>Rationale and Background<a class="headerlink" href="#rationale-and-background" title="Link to this heading">¶</a></h1>
+<p><strong>pynomial</strong> is a Python library intended to re-implement R’s <cite>{binom}</cite> package.  It offers most of the same functionality.</p>
+<section id="why-pynomial">
+<h2>Why pynomial?<a class="headerlink" href="#why-pynomial" title="Link to this heading">¶</a></h2>
+<p>To screw around with package development.</p>
+</section>
+<section id="comparison-with-r-s-binom-package">
+<h2>Comparison with R’s binom Package<a class="headerlink" href="#comparison-with-r-s-binom-package" title="Link to this heading">¶</a></h2>
+<p>The R <cite>binom</cite> package provides functions like <cite>binom.confint()</cite> that compute confidence
+intervals using various methods. <strong>pynomial</strong> provides equivalent functionality with
+these methods:</p>
+<ul class="simple">
+<li><p><strong>wald()</strong> ↔ <cite>method=”wald”</cite> - Wald interval (normal approximation)</p></li>
+<li><p><strong>wilson()</strong> ↔ <cite>method=”wilson”</cite> - Wilson score interval</p></li>
+<li><p><strong>agresti_coull()</strong> ↔ <cite>method=”ac”</cite> - Agresti-Coull interval</p></li>
+<li><p><strong>clopper_pearson()</strong> ↔ <cite>method=”exact”</cite> - Exact (Clopper-Pearson) interval</p></li>
+<li><p><strong>bayesian_beta()</strong> ↔ <cite>method=”bayes”</cite> - Bayesian interval with Beta prior</p></li>
+<li><p><strong>logit()</strong> ↔ <cite>method=”logit”</cite> - Logit transformation interval</p></li>
+<li><p><strong>cloglog()</strong> ↔ <cite>method=”cloglog”</cite> - Complementary log-log interval</p></li>
+<li><p><strong>arcsine()</strong> ↔ <cite>method=”asymptotic”</cite> - Arcsine transformation interval</p></li>
+</ul>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
+<p>Install pynomial via pip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pynomial</span>
+</pre></div>
+</div>
+<p>Basic usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pynomial</span>
+
+<span class="c1"># Calculate Wilson confidence interval</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">pynomial</span><span class="o">.</span><span class="n">wilson</span><span class="p">(</span><span class="n">successes</span><span class="o">=</span><span class="mi">85</span><span class="p">,</span> <span class="n">trials</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;95% CI: [</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">lower</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">upper</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compare multiple methods</span>
+<span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="n">pynomial</span><span class="o">.</span><span class="n">wilson</span><span class="p">,</span> <span class="n">pynomial</span><span class="o">.</span><span class="n">wald</span><span class="p">,</span> <span class="n">pynomial</span><span class="o">.</span><span class="n">clopper_pearson</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+    <span class="n">ci</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="mi">85</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: [</span><span class="si">{</span><span class="n">ci</span><span class="o">.</span><span class="n">lower</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ci</span><span class="o">.</span><span class="n">upper</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
 <section id="module-pynomial.intervals">
 <span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-pynomial.intervals" title="Link to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">ConfidenceIntervalType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynomial/intervals.html#ConfidenceIntervalType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>Enumeration of available confidence interval methods for binomial proportions.</p>
-<p>This enum defines the supported methods for computing confidence intervals,
-each with different statistical properties and use cases.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType.WALD">
-<span class="sig-name descname"><span class="pre">WALD</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType.WALD" title="Link to this definition">¶</a></dt>
-<dd><p>Wald interval based on normal approximation</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType.AGRESTI_COULL">
-<span class="sig-name descname"><span class="pre">AGRESTI_COULL</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType.AGRESTI_COULL" title="Link to this definition">¶</a></dt>
-<dd><p>Agresti-Coull interval with pseudo-observations</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType.ARCSINE">
-<span class="sig-name descname"><span class="pre">ARCSINE</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType.ARCSINE" title="Link to this definition">¶</a></dt>
-<dd><p>Arcsine transformation interval</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType.BAYESIAN_BETA">
-<span class="sig-name descname"><span class="pre">BAYESIAN_BETA</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType.BAYESIAN_BETA" title="Link to this definition">¶</a></dt>
-<dd><p>Bayesian interval using Beta prior</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType.CLOPPER_PEARSON">
-<span class="sig-name descname"><span class="pre">CLOPPER_PEARSON</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType.CLOPPER_PEARSON" title="Link to this definition">¶</a></dt>
-<dd><p>Exact (Clopper-Pearson) interval</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType.WILSON">
-<span class="sig-name descname"><span class="pre">WILSON</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType.WILSON" title="Link to this definition">¶</a></dt>
-<dd><p>Wilson (score) interval</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType.LOGIT">
-<span class="sig-name descname"><span class="pre">LOGIT</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType.LOGIT" title="Link to this definition">¶</a></dt>
-<dd><p>Logit transformation interval</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceIntervalType.CLOGLOG">
-<span class="sig-name descname"><span class="pre">CLOGLOG</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceIntervalType.CLOGLOG" title="Link to this definition">¶</a></dt>
-<dd><p>Complementary log-log transformation interval</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">WALD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'wald'</span></em><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">AGRESTI_COULL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'agresti_coull'</span></em><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">ARCSINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'arcsine'</span></em><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">BAYESIAN_BETA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bayesian_beta'</span></em><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">CLOPPER_PEARSON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'clopper_pearson'</span></em><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">WILSON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'wilson'</span></em><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">LOGIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'logit'</span></em><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">CLOGLOG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cloglog'</span></em><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceInterval">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">ConfidenceInterval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pynomial.intervals.ConfidenceIntervalType" title="pynomial.intervals.ConfidenceIntervalType"><span class="pre">ConfidenceIntervalType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_estimate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynomial/intervals.html#ConfidenceInterval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.ConfidenceInterval" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Result object containing confidence interval information.</p>
-<p>This dataclass holds all the information about a computed confidence interval
-including the method used, confidence level, point estimate, and bounds.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceInterval.type">
-<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceInterval.type" title="Link to this definition">¶</a></dt>
-<dd><p>The method used to compute the interval</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pynomial.intervals.ConfidenceIntervalType" title="pynomial.intervals.ConfidenceIntervalType">ConfidenceIntervalType</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceInterval.confidence_level">
-<span class="sig-name descname"><span class="pre">confidence_level</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceInterval.confidence_level" title="Link to this definition">¶</a></dt>
-<dd><p>The confidence level (e.g., 0.95 for 95%)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceInterval.point_estimate">
-<span class="sig-name descname"><span class="pre">point_estimate</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceInterval.point_estimate" title="Link to this definition">¶</a></dt>
-<dd><p>The point estimate of the proportion</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceInterval.lower">
-<span class="sig-name descname"><span class="pre">lower</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceInterval.lower" title="Link to this definition">¶</a></dt>
-<dd><p>Lower bound of the confidence interval</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceInterval.upper">
-<span class="sig-name descname"><span class="pre">upper</span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceInterval.upper" title="Link to this definition">¶</a></dt>
-<dd><p>Upper bound of the confidence interval</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>All proportion values (point_estimate, lower, upper) are in the range [0, 1].</p>
-</div>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pynomial.intervals.ConfidenceIntervalType" title="pynomial.intervals.ConfidenceIntervalType"><span class="pre">ConfidenceIntervalType</span></a></em><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">confidence_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">point_estimate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#id10" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">lower</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#id11" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id12">
-<span class="sig-name descname"><span class="pre">upper</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#id12" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pynomial.intervals.ConfidenceInterval.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pynomial.intervals.ConfidenceIntervalType" title="pynomial.intervals.ConfidenceIntervalType"><span class="pre">ConfidenceIntervalType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_estimate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pynomial.intervals.ConfidenceInterval.__init__" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="pynomial.intervals.wald">
-<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">wald</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval"><span class="pre">ConfidenceInterval</span></a></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#wald"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.wald" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">wald</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfidenceInterval</span></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#wald"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.wald" title="Link to this definition">¶</a></dt>
 <dd><p>Wald confidence interval for binomial proportions.</p>
 <p>The Wald interval is based on the normal approximation to the binomial distribution.
 It uses the standard error of the proportion to construct symmetric confidence bounds
@@ -257,7 +109,7 @@ critical value from the standard normal distribution.</p>
 <dd class="field-even"><p>Object containing the confidence interval bounds and metadata</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval">ConfidenceInterval</a></p>
+<dd class="field-odd"><p>ConfidenceInterval</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -270,7 +122,7 @@ for better coverage in these cases.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pynomial.intervals.agresti_coull">
-<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">agresti_coull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval"><span class="pre">ConfidenceInterval</span></a></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#agresti_coull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.agresti_coull" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">agresti_coull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfidenceInterval</span></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#agresti_coull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.agresti_coull" title="Link to this definition">¶</a></dt>
 <dd><p>Agresti-Coull confidence interval for binomial proportions.</p>
 <p>This method adds pseudo-observations to improve the coverage properties of
 the Wald interval, particularly for small sample sizes and extreme proportions.
@@ -293,7 +145,7 @@ CI &amp;= \tilde{p} \pm z_{\alpha/2} \sqrt{\frac{\tilde{p}(1-\tilde{p})}{\tilde{
 <dd class="field-even"><p>Object containing the confidence interval bounds and metadata</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval">ConfidenceInterval</a></p>
+<dd class="field-odd"><p>ConfidenceInterval</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -305,7 +157,7 @@ while the interval bounds use the adjusted proportion.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pynomial.intervals.arcsine">
-<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">arcsine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval"><span class="pre">ConfidenceInterval</span></a></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#arcsine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.arcsine" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">arcsine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfidenceInterval</span></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#arcsine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.arcsine" title="Link to this definition">¶</a></dt>
 <dd><p>Arcsine confidence interval for binomial proportions.</p>
 <p>The arcsine transformation (also known as angular transformation) stabilizes
 the variance of the binomial proportion. This method uses an adjusted proportion
@@ -329,7 +181,7 @@ CI &amp;= [\sin^2(\theta - \text{margin}), \sin^2(\theta + \text{margin})]\end{s
 <dd class="field-even"><p>Object containing the confidence interval bounds and metadata</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval">ConfidenceInterval</a></p>
+<dd class="field-odd"><p>ConfidenceInterval</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -341,7 +193,7 @@ the boundaries (0 or 1) and provides good coverage properties.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pynomial.intervals.bayesian_beta">
-<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">bayesian_beta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'central'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval"><span class="pre">ConfidenceInterval</span></a></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#bayesian_beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.bayesian_beta" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">bayesian_beta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'central'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfidenceInterval</span></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#bayesian_beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.bayesian_beta" title="Link to this definition">¶</a></dt>
 <dd><p>Bayesian confidence interval using Beta prior.</p>
 <p>Based on R’s binom.bayes function from the binom package.</p>
 <dl class="field-list simple">
@@ -362,7 +214,7 @@ the boundaries (0 or 1) and provides good coverage properties.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pynomial.intervals.clopper_pearson">
-<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">clopper_pearson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval"><span class="pre">ConfidenceInterval</span></a></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#clopper_pearson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.clopper_pearson" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">clopper_pearson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfidenceInterval</span></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#clopper_pearson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.clopper_pearson" title="Link to this definition">¶</a></dt>
 <dd><p>Clopper-Pearson exact confidence interval for binomial proportions.</p>
 <p>This method provides exact coverage by using the relationship between
 the binomial and beta distributions. It guarantees that the actual
@@ -385,7 +237,7 @@ with parameters <span class="math notranslate nohighlight">\(a\)</span> and <spa
 <dd class="field-even"><p>Object containing the confidence interval bounds and metadata</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval">ConfidenceInterval</a></p>
+<dd class="field-odd"><p>ConfidenceInterval</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -405,7 +257,7 @@ the “exact” method.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pynomial.intervals.wilson">
-<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">wilson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct_continuity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval"><span class="pre">ConfidenceInterval</span></a></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#wilson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.wilson" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">wilson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct_continuity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfidenceInterval</span></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#wilson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.wilson" title="Link to this definition">¶</a></dt>
 <dd><p>Wilson confidence interval for binomial proportions.</p>
 <p>The Wilson interval (also known as score interval) provides better coverage
 properties than the Wald interval, especially for small sample sizes and
@@ -423,7 +275,7 @@ extreme proportions. It can optionally include a continuity correction.</p>
 <dd class="field-even"><p>Object containing the confidence interval bounds and metadata</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval">ConfidenceInterval</a></p>
+<dd class="field-odd"><p>ConfidenceInterval</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -436,7 +288,7 @@ generally improves performance for discrete data.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pynomial.intervals.logit">
-<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">logit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval"><span class="pre">ConfidenceInterval</span></a></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#logit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.logit" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">logit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfidenceInterval</span></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#logit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.logit" title="Link to this definition">¶</a></dt>
 <dd><p>Logit transformation confidence interval for binomial proportions.</p>
 <p>The logit transformation stabilizes the variance and constrains the
 confidence interval to the valid range [0,1]. This method transforms
@@ -462,7 +314,7 @@ and <span class="math notranslate nohighlight">\(\hat{p} = x/n\)</span> is the s
 <dd class="field-even"><p>Object containing the confidence interval bounds and metadata</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval">ConfidenceInterval</a></p>
+<dd class="field-odd"><p>ConfidenceInterval</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -482,7 +334,7 @@ for proportions near the boundaries.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pynomial.intervals.cloglog">
-<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">cloglog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval"><span class="pre">ConfidenceInterval</span></a></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#cloglog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.cloglog" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pynomial.intervals.</span></span><span class="sig-name descname"><span class="pre">cloglog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfidenceInterval</span></span></span><a class="reference internal" href="_modules/pynomial/intervals.html#cloglog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pynomial.intervals.cloglog" title="Link to this definition">¶</a></dt>
 <dd><p>Complementary log-log transformation confidence interval for binomial proportions.</p>
 <p>The complementary log-log (cloglog) transformation is particularly useful
 when the true proportion is expected to be close to 0. This transformation
@@ -509,7 +361,7 @@ and <span class="math notranslate nohighlight">\(\hat{p} = x/n\)</span> is the s
 <dd class="field-even"><p>Object containing the confidence interval bounds and metadata</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pynomial.intervals.ConfidenceInterval" title="pynomial.intervals.ConfidenceInterval">ConfidenceInterval</a></p>
+<dd class="field-odd"><p>ConfidenceInterval</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -537,65 +389,74 @@ or when the true proportion is expected to be small.</p>
 </section>
 
 
+            <div class="clearer"></div>
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">pynomial</a></h1>
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">pynomial documentation</a></li>
+<li><a class="reference internal" href="#rationale-and-background">Rationale and Background</a><ul>
+<li><a class="reference internal" href="#why-pynomial">Why pynomial?</a></li>
+<li><a class="reference internal" href="#comparison-with-r-s-binom-package">Comparison with R’s binom Package</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pynomial.intervals">API Reference</a><ul>
+<li><a class="reference internal" href="#pynomial.intervals.wald"><code class="docutils literal notranslate"><span class="pre">wald()</span></code></a></li>
+<li><a class="reference internal" href="#pynomial.intervals.agresti_coull"><code class="docutils literal notranslate"><span class="pre">agresti_coull()</span></code></a></li>
+<li><a class="reference internal" href="#pynomial.intervals.arcsine"><code class="docutils literal notranslate"><span class="pre">arcsine()</span></code></a></li>
+<li><a class="reference internal" href="#pynomial.intervals.bayesian_beta"><code class="docutils literal notranslate"><span class="pre">bayesian_beta()</span></code></a></li>
+<li><a class="reference internal" href="#pynomial.intervals.clopper_pearson"><code class="docutils literal notranslate"><span class="pre">clopper_pearson()</span></code></a></li>
+<li><a class="reference internal" href="#pynomial.intervals.wilson"><code class="docutils literal notranslate"><span class="pre">wilson()</span></code></a></li>
+<li><a class="reference internal" href="#pynomial.intervals.logit"><code class="docutils literal notranslate"><span class="pre">logit()</span></code></a></li>
+<li><a class="reference internal" href="#pynomial.intervals.cloglog"><code class="docutils literal notranslate"><span class="pre">cloglog()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
 
-
-
-
-
-
-
-
-
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-
-
-
-
-
-
-
-
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &#169;2025, Demetri Pananos.
-      
-      |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pynomial  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pynomial documentation</a></li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, Demetri Pananos.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
   </body>
 </html>

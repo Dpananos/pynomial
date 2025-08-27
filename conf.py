@@ -30,7 +30,7 @@ autodoc_default_options = {
     'member-order': 'bysource',
     'special-members': '__init__',
     'undoc-members': True,
-    'exclude-members': '__weakref__'
+    'exclude-members': '__weakref__, ConfidenceIntervalType, ConfidenceInterval'
 }
 
 # Napoleon settings (for Google/NumPy style docstrings)
@@ -50,5 +50,5 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'sphinxdoc'
 html_static_path = ['_static']
