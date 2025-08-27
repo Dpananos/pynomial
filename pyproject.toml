@@ -30,6 +30,11 @@ dev = [
     "sphinx-autodoc-typehints>=3.2.0",
     "sphinx-rtd-theme>=3.0.2",
 ]
+docs = [
+    "sphinx>=8.2.3",
+    "sphinx-rtd-theme>=3.0.2", 
+    "sphinx-autodoc-typehints>=3.2.0",
+]
 
 [tool.pytest.ini_options]
 markers = [

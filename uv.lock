@@ -439,6 +439,11 @@ dev = [
     { name = "sphinx-autodoc-typehints" },
     { name = "sphinx-rtd-theme" },
 ]
+docs = [
+    { name = "sphinx" },
+    { name = "sphinx-autodoc-typehints" },
+    { name = "sphinx-rtd-theme" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -451,6 +456,11 @@ requires-dist = [
 dev = [
     { name = "pytest", specifier = ">=8.4.1" },
     { name = "scipy-stubs", specifier = ">=1.16.1.1" },
+    { name = "sphinx", specifier = ">=8.2.3" },
+    { name = "sphinx-autodoc-typehints", specifier = ">=3.2.0" },
+    { name = "sphinx-rtd-theme", specifier = ">=3.0.2" },
+]
+docs = [
     { name = "sphinx", specifier = ">=8.2.3" },
     { name = "sphinx-autodoc-typehints", specifier = ">=3.2.0" },
     { name = "sphinx-rtd-theme", specifier = ">=3.0.2" },
