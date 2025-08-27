@@ -50,5 +50,12 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinxdoc'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+
+# ReadTheDocs theme options
+html_theme_options = {
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
