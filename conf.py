@@ -7,6 +7,20 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 
+# ReadTheDocs build configuration
+# Check if we're building on ReadTheDocs
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if on_rtd:
+    # Configure for ReadTheDocs environment
+    html_context = {
+        'display_github': True,
+        'github_user': 'demetripananos',  # Replace with your GitHub username
+        'github_repo': 'pynomial',        # Replace with your repo name
+        'github_version': 'main',
+        'conf_py_path': '/',
+    }
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
