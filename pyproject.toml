@@ -10,6 +10,14 @@ dependencies = [
     "scipy>=1.16.1",
 ]
 
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["pynomial*"]
+exclude = ["source*", "tests*", "docs*", "build*"]
+
 [dependency-groups]
 dev = [
     "pytest>=8.4.1",

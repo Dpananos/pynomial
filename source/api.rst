@@ -1,27 +1,18 @@
 API Reference
 =============
 
-pynomial.intervals module
---------------------------
-
-.. automodule:: pynomial.intervals
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Functions
-~~~~~~~~~
+Confidence Interval Functions
+-----------------------------
 
 .. autosummary::
    :toctree: generated/
-   :nosignatures:
 
-   wald
-   wilson
-   agresti_coull
-   arcsine
-   bayesian_beta
-   clopper_pearson
-   logit
-   cloglog
+   pynomial.intervals.wald
+   pynomial.intervals.wilson
+   pynomial.intervals.agresti_coull
+   pynomial.intervals.arcsine
+   pynomial.intervals.bayesian_beta
+   pynomial.intervals.clopper_pearson
+   pynomial.intervals.logit
+   pynomial.intervals.cloglog
 
