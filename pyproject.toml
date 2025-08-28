@@ -13,7 +13,16 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.4.1",
-    "scipy-stubs>=1.16.1.1"
+    "scipy-stubs>=1.16.1.1",
+    "sphinx>=8.2.3",
+    "sphinx-rtd-theme>=3.0.2",
+    "sphinx-autodoc-typehints>=3.2.0",
+    "sphinx-book-theme>=1.1.4",
+]
+docs = [
+    "sphinx>=8.2.3",
+    "sphinx-rtd-theme>=3.0.2", 
+    "sphinx-autodoc-typehints>=3.2.0",
 ]
 
 [tool.pytest.ini_options]

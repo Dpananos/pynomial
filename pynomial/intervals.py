@@ -21,6 +21,7 @@ class ConfidenceIntervalType(str, Enum):
         WILSON: Wilson (score) interval
         LOGIT: Logit transformation interval
         CLOGLOG: Complementary log-log transformation interval
+    :meta private:
     """
 
     WALD = "wald"
@@ -48,8 +49,7 @@ class ConfidenceInterval:
         lower (float): Lower bound of the confidence interval
         upper (float): Upper bound of the confidence interval
 
-    Note:
-        All proportion values (point_estimate, lower, upper) are in the range [0, 1].
+    :meta private:
     """
 
     type: ConfidenceIntervalType
@@ -92,9 +92,7 @@ def _check_inputs(x, n, confidence_level: float = 0.95):
     Raises:
         ValueError: If any input parameter is invalid or if arrays are not broadcastable
 
-    Note:
-        This function supports broadcasting, allowing x, n, and confidence_level
-        to be arrays of compatible shapes.
+
     """
     if x is None or n is None:
         raise ValueError("x and n must not be None")
@@ -140,10 +138,7 @@ def _highest_density_interval_beta(
     Returns:
         tuple[float, float]: Lower and upper bounds of the highest density interval
 
-    Note:
-        This implements the algorithm from R's binom package C code.
-        Falls back to equal-tailed interval if convergence fails.
-        Raises a warning if convergence fails.
+
     """
 
     alpha = 1 - confidence_level
@@ -230,9 +225,7 @@ def _find_beta_density_root(
     Returns:
         float: The x-value where pdf(x) ≈ target_density
 
-    Note:
-        Uses Brent's method for root finding. Falls back to midpoint
-        if root finding fails.
+
     """
     from scipy.optimize import brentq
 
@@ -269,9 +262,7 @@ def _continuity_corrected_wilson(
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Note:
-        This is an internal helper function used by the wilson() function when
-        correct_continuity=True is specified.
+    :meta private:
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -322,9 +313,7 @@ def _wilson_no_continuity(
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Note:
-        This is an internal helper function used by the wilson() function when
-        correct_continuity=False is specified.
+    :meta private:
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -350,14 +339,17 @@ def wald(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     """
     Wald confidence interval for binomial proportions.
 
-    The Wald interval is based on the normal approximation to the binomial distribution.
-    It uses the standard error of the proportion to construct symmetric confidence bounds
-    around the sample proportion.
+    In the limit of large samples, the sample average of iid Bernoulli random variables is approximately normally distributed.
 
     .. math::
-        CI = \\hat{p} \\pm z_{\\alpha/2} \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}
+        \\hat{p} \\sim N\\left(p, \\frac{p(1-p)}{n}\\right)
 
-    where :math:`\\hat{p} = x/n` is the sample proportion and :math:`z_{\\alpha/2}` is the 
+    The Wald interval is then given by:
+
+    .. math::
+        CI = \\hat{p} \\pm z_{1 - \\alpha/2} \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}
+
+    where :math:`\\hat{p} = x/n` is the sample proportion and :math:`z_{1 - \\alpha/2}` is the 
     critical value from the standard normal distribution.
 
     Args:
@@ -368,10 +360,7 @@ def wald(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Note:
-        The Wald interval can perform poorly for extreme proportions (near 0 or 1)
-        or small sample sizes. Consider using Wilson or Clopper-Pearson intervals
-        for better coverage in these cases.
+
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -401,9 +390,9 @@ def agresti_coull(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceI
         \\tilde{x} &= x + \\frac{z^2}{2} \\\\
         \\tilde{n} &= n + z^2 \\\\
         \\tilde{p} &= \\frac{\\tilde{x}}{\\tilde{n}} \\\\
-        CI &= \\tilde{p} \\pm z_{\\alpha/2} \\sqrt{\\frac{\\tilde{p}(1-\\tilde{p})}{\\tilde{n}}}
+        CI &= \\tilde{p} \\pm z_{1 - \\alpha/2} \\sqrt{\\frac{\\tilde{p}(1-\\tilde{p})}{\\tilde{n}}}
 
-    where :math:`z = z_{\\alpha/2}` is the critical value from the standard normal distribution.
+    where :math:`z = z_{1 - \\alpha/2}` is the critical value from the standard normal distribution.
 
     Args:
         x (int): Number of successes (0 ≤ x ≤ n)
@@ -413,9 +402,7 @@ def agresti_coull(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceI
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Note:
-        The point estimate returned is the original sample proportion x/n,
-        while the interval bounds use the adjusted proportion.
+
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -449,10 +436,10 @@ def arcsine(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
     .. math::
         \\tilde{p} &= \\frac{x + 0.375}{n + 0.75} \\\\
         \\theta &= \\arcsin(\\sqrt{\\tilde{p}}) \\\\
-        \\text{margin} &= \\frac{z_{\\alpha/2}}{2\\sqrt{n}} \\\\
+        \\text{margin} &= \\frac{z_{1-\\alpha/2}}{2\\sqrt{n}} \\\\
         CI &= [\\sin^2(\\theta - \\text{margin}), \\sin^2(\\theta + \\text{margin})]
 
-    where :math:`z_{\\alpha/2}` is the critical value from the standard normal distribution.
+    where :math:`z = z_{1 - \\alpha/2}` is the critical value from the standard normal distribution.
 
     Args:
         x (int): Number of successes (0 ≤ x ≤ n)
@@ -462,9 +449,7 @@ def arcsine(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Note:
-        The arcsine transformation is particularly useful for proportions near
-        the boundaries (0 or 1) and provides good coverage properties.
+
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -588,10 +573,7 @@ def clopper_pearson(
         - When x=0: lower bound = 0
         - When x=n: upper bound = 1
 
-    Note:
-        This is the most conservative method, providing exact coverage but
-        potentially wider intervals than approximate methods. Also known as
-        the "exact" method.
+
     """
     _check_inputs(x, n, confidence_level)
     pe = x / n
@@ -635,10 +617,7 @@ def wilson(
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Note:
-        The Wilson interval is generally recommended over the Wald interval
-        due to its superior coverage properties. The continuity correction
-        generally improves performance for discrete data.
+
     """
     if correct_continuity:
         return _continuity_corrected_wilson(x, n, confidence_level)
@@ -660,7 +639,7 @@ def logit(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     .. math::
         \\text{logit}(\\hat{p}) &= \\ln\\left(\\frac{\\hat{p}}{1-\\hat{p}}\\right) \\\\
         SE_{\\text{logit}} &= \\sqrt{\\frac{1}{n\\hat{p}(1-\\hat{p})}} \\\\
-        \\text{logit}(CI) &= \\text{logit}(\\hat{p}) \\pm z_{\\alpha/2} \\cdot SE_{\\text{logit}} \\\\
+        \\text{logit}(CI) &= \\text{logit}(\\hat{p}) \\pm z_{1-\\alpha/2} \\cdot SE_{\\text{logit}} \\\\
         CI &= \\left[\\frac{e^{L}}{1+e^{L}}, \\frac{e^{U}}{1+e^{U}}\\right]
 
     where :math:`L` and :math:`U` are the lower and upper bounds on the logit scale,
@@ -678,10 +657,7 @@ def logit(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
         - When x=0: lower = 0, upper calculated using beta distribution
         - When x=n: upper = 1, lower calculated using beta distribution
 
-    Note:
-        The logit transformation provides good coverage properties and
-        naturally constrains intervals to [0,1], making it suitable
-        for proportions near the boundaries.
+
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -729,7 +705,7 @@ def cloglog(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
         \\text{cloglog}(\\hat{p}) &= \\ln(-\\ln(1-\\hat{p})) \\\\
         \\mu &= \\ln(\\hat{p}) \\\\
         \\text{Var}[\\text{cloglog}(\\hat{p})] &= \\frac{1-\\hat{p}}{n\\hat{p}\\mu^2} \\\\
-        \\text{cloglog}(CI) &= \\text{cloglog}(\\hat{p}) \\pm z_{\\alpha/2} \\sqrt{\\text{Var}[\\text{cloglog}(\\hat{p})]} \\\\
+        \\text{cloglog}(CI) &= \\text{cloglog}(\\hat{p}) \\pm z_{1-\\alpha/2} \\sqrt{\\text{Var}[\\text{cloglog}(\\hat{p})]} \\\\
         CI &= [\\exp(-\\exp(U)), \\exp(-\\exp(L))]
 
     where :math:`L` and :math:`U` are the lower and upper bounds on the cloglog scale,
@@ -747,16 +723,14 @@ def cloglog(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
         - When x=0: lower = 0, upper = :math:`1 - (\\alpha/2)^{1/n}`
         - When x=n: lower = :math:`(\\alpha/2)^{1/n}`, upper = 1
 
-    Note:
-        This method is especially recommended when studying rare events
-        or when the true proportion is expected to be small.
+
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
     pe = x / n
     alpha = 1 - confidence_level
     alpha2 = 0.5 * alpha
-
+    
     if x == 0:
         lower = 0.0
         upper = 1 - alpha2 ** (1 / n)
@@ -768,10 +742,10 @@ def cloglog(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
         mu = np.log(pe)
         var_cloglog = (1 - pe) / (n * pe * mu**2)
         sd = np.sqrt(var_cloglog)
-
+        
         lcl_loglog = log_mu + z_score * sd
         ucl_loglog = log_mu - z_score * sd
-
+        
         lower = np.exp(-np.exp(lcl_loglog))
         upper = np.exp(-np.exp(ucl_loglog))
 
