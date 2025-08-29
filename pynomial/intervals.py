@@ -337,20 +337,10 @@ def _wilson_no_continuity(
 
 def wald(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     """
-    Wald confidence interval for binomial proportions.
-
-    In the limit of large samples, the sample average of iid Bernoulli random variables is approximately normally distributed.
-
-    .. math::
-        \\hat{p} \\sim N\\left(p, \\frac{p(1-p)}{n}\\right)
-
-    The Wald interval is then given by:
+    Wald confidence interval for binomial proportions based off the central limit theorem.
 
     .. math::
         CI = \\hat{p} \\pm z_{1 - \\alpha/2} \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}
-
-    where :math:`\\hat{p} = x/n` is the sample proportion and :math:`z_{1 - \\alpha/2}` is the 
-    critical value from the standard normal distribution.
 
     Args:
         x (int): Number of successes (0 ≤ x ≤ n)
@@ -359,8 +349,6 @@ def wald(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
 
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
-
-
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -380,19 +368,13 @@ def wald(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
 
 def agresti_coull(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     """
-    Agresti-Coull confidence interval for binomial proportions.
-
-    This method adds pseudo-observations to improve the coverage properties of
-    the Wald interval, particularly for small sample sizes and extreme proportions.
-    It adds :math:`z^2/2` successes and :math:`z^2/2` failures to the data.
+    Agresti-Coull confidence interval for binomial proportions from Agresti and Coull (1998) [1].
 
     .. math::
         \\tilde{x} &= x + \\frac{z^2}{2} \\\\
         \\tilde{n} &= n + z^2 \\\\
         \\tilde{p} &= \\frac{\\tilde{x}}{\\tilde{n}} \\\\
         CI &= \\tilde{p} \\pm z_{1 - \\alpha/2} \\sqrt{\\frac{\\tilde{p}(1-\\tilde{p})}{\\tilde{n}}}
-
-    where :math:`z = z_{1 - \\alpha/2}` is the critical value from the standard normal distribution.
 
     Args:
         x (int): Number of successes (0 ≤ x ≤ n)
@@ -402,7 +384,10 @@ def agresti_coull(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceI
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-
+    References
+    ----------
+    .. [1] Agresti, Alan, and Brent A. Coull. "Approximate is better than "exact" for interval estimation of binomial proportions."
+           The American Statistician 52.2 (1998): 119-126.
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -425,21 +410,13 @@ def agresti_coull(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceI
 
 def arcsine(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     """
-    Arcsine confidence interval for binomial proportions.
-
-    The arcsine transformation (also known as angular transformation) stabilizes
-    the variance of the binomial proportion. This method uses an adjusted proportion
-    and applies the arcsine square-root transformation to construct confidence intervals.
-
-    This implementation follows the R DescTools package formula:
+    Arcsine confidence interval for binomial proportions. The addition of 0.375 and 0.75 is an Anscombe correction [1].
 
     .. math::
         \\tilde{p} &= \\frac{x + 0.375}{n + 0.75} \\\\
         \\theta &= \\arcsin(\\sqrt{\\tilde{p}}) \\\\
         \\text{margin} &= \\frac{z_{1-\\alpha/2}}{2\\sqrt{n}} \\\\
         CI &= [\\sin^2(\\theta - \\text{margin}), \\sin^2(\\theta + \\text{margin})]
-
-    where :math:`z = z_{1 - \\alpha/2}` is the critical value from the standard normal distribution.
 
     Args:
         x (int): Number of successes (0 ≤ x ≤ n)
@@ -449,13 +426,16 @@ def arcsine(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-
+    References
+    ----------
+    .. [1] Anscombe, Francis J. "The transformation of Poisson, binomial and negative-binomial data." Biometrika 35.3/4 (1948): 246-254.
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
 
     pe = x / n
 
+    # Anscombe correction
     p_tilde = (x + 0.375) / (n + 0.75)
     arcsine_p_tilde = np.arcsin(np.sqrt(p_tilde))
 
@@ -483,19 +463,31 @@ def bayesian_beta(
     max_iter: int = 1000,
 ) -> ConfidenceInterval:
     """
-    Bayesian confidence interval using Beta prior.
+    Bayesian confidence interval using Beta prior.  A conjugate beta prior is used so that the prior is
 
-    Based on R's binom.bayes function from the binom package.
+    .. math::
+        \\Pr(p) = \\dfrac{p^{a}(1-p)^{b}}{B(a,b)}
+
+    where :math:`B(a,b)` is the beta function.  Default values of 0.5 result in a Jeffreys prior.
+
+    The posterior is then given by
+
+    .. math::
+        \\Pr(p|x) = \\dfrac{p^{x+a}(1-p)^{n-x+b}}{B(x+a,n-x+b)}
+
 
     Args:
-        x: Number of successes
-        n: Number of trials
-        prior_alpha: Prior alpha parameter (shape1), default 0.5 (Jeffreys prior)
-        prior_beta: Prior beta parameter (shape2), default 0.5 (Jeffreys prior)
-        confidence_level: Confidence level
-        interval_type: Either "central" (equal-tailed) or "highest" (highest density interval)
-        tol: Tolerance for convergence (used for highest density intervals)
-        max_iter: Maximum iterations for convergence
+        x (int): Number of successes (0 ≤ x ≤ n)
+        n (int): Number of trials (n > 0)
+        prior_alpha (float): Prior alpha parameter (shape1), default 0.5 (Jeffreys prior)
+        prior_beta (float): Prior beta parameter (shape2), default 0.5 (Jeffreys prior)
+        confidence_level (float): Confidence level between 0 and 1 (default: 0.95)
+        interval_type (str): Either "central" (equal-tailed) or "highest" (highest density interval)
+        tol (float): Tolerance for convergence (used for highest density intervals)
+        max_iter (int): Maximum iterations for convergence
+
+    Returns:
+        ConfidenceInterval: Object containing the confidence interval bounds and metadata
     """
     _check_inputs(x, n, confidence_level)
 
@@ -548,18 +540,9 @@ def clopper_pearson(
     """
     Clopper-Pearson exact confidence interval for binomial proportions.
 
-    This method provides exact coverage by using the relationship between
-    the binomial and beta distributions. It guarantees that the actual
-    coverage probability is at least the nominal confidence level.
-
-    The confidence interval bounds are given by:
-
     .. math::
         \\text{Lower bound} &= \\text{Beta}_{\\alpha/2}(x, n-x+1) \\\\
         \\text{Upper bound} &= \\text{Beta}_{1-\\alpha/2}(x+1, n-x)
-
-    where :math:`\\text{Beta}_{p}(a,b)` is the :math:`p`-th quantile of the Beta distribution 
-    with parameters :math:`a` and :math:`b`, and :math:`\\alpha = 1 - \\text{confidence_level}`.
 
     Args:
         x (int): Number of successes (0 ≤ x ≤ n)
@@ -569,11 +552,9 @@ def clopper_pearson(
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Special cases:
+    Special Cases:
         - When x=0: lower bound = 0
         - When x=n: upper bound = 1
-
-
     """
     _check_inputs(x, n, confidence_level)
     pe = x / n
@@ -602,22 +583,45 @@ def wilson(
     x: int, n: int, correct_continuity: bool = True, confidence_level: float = 0.95
 ) -> ConfidenceInterval:
     """
-    Wilson confidence interval for binomial proportions.
+        Wilson confidence interval for binomial proportions.
 
-    The Wilson interval (also known as score interval) provides better coverage
-    properties than the Wald interval, especially for small sample sizes and
-    extreme proportions. It can optionally include a continuity correction.
+    The Wilson (or score) interval is obtained by inverting the score test 
+    for the binomial proportion. Unlike the Wald interval, it avoids 
+    poor coverage when n is small or p is near 0 or 1. 
+
+    The interval arises from solving the quadratic inequality [1]:
+
+    .. math::
+        n (\hat{p} - p)^2 \leq z_{1 - \\alpha/2}^2 \, p (1 - p)
+
+    where :math:`\hat{p} = x/n` is the sample proportion and 
+    :math:`z_{\\alpha/2}` is the standard normal quantile.
+
+    Solving for :math:`p` gives the Wilson bounds:
+
+    .. math::
+        \\text{Lower}, \\text{Upper} = 
+        \\frac{\\hat{p} + \\tfrac{z^2}{2n} \\pm 
+        z \\sqrt{ \\tfrac{\\hat{p}(1 - \\hat{p})}{n} + \\tfrac{z^2}{4n^2} } }
+        {1 + \\tfrac{z^2}{n}}
+
+    Optionally, a continuity correction can be applied to better account 
+    for the discreteness of the binomial distribution.
 
     Args:
-        x (int): Number of successes (0 ≤ x ≤ n)
-        n (int): Number of trials (n > 0)
-        correct_continuity (bool): Whether to apply continuity correction (default: True)
-        confidence_level (float): Confidence level between 0 and 1 (default: 0.95)
+        x (int): Number of successes (0 ≤ x ≤ n).
+        n (int): Number of trials (n > 0).
+        correct_continuity (bool): Whether to apply continuity correction 
+            (default: True).
+        confidence_level (float): Confidence level between 0 and 1 
+            (default: 0.95).
 
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-
+    References
+    ----------
+    .. [1] Lachin, John M. Biostatistical methods: the assessment of relative risks. John Wiley & Sons, 2014.
     """
     if correct_continuity:
         return _continuity_corrected_wilson(x, n, confidence_level)
@@ -627,23 +631,13 @@ def wilson(
 
 def logit(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     """
-    Logit transformation confidence interval for binomial proportions.
-
-    The logit transformation stabilizes the variance and constrains the
-    confidence interval to the valid range [0,1]. This method transforms
-    the proportion to the logit scale, applies normal theory, then
-    transforms back to the probability scale.
-
-    The transformation and confidence interval are given by:
+    Logit transformation confidence interval for binomial proportions [1].
 
     .. math::
         \\text{logit}(\\hat{p}) &= \\ln\\left(\\frac{\\hat{p}}{1-\\hat{p}}\\right) \\\\
         SE_{\\text{logit}} &= \\sqrt{\\frac{1}{n\\hat{p}(1-\\hat{p})}} \\\\
         \\text{logit}(CI) &= \\text{logit}(\\hat{p}) \\pm z_{1-\\alpha/2} \\cdot SE_{\\text{logit}} \\\\
         CI &= \\left[\\frac{e^{L}}{1+e^{L}}, \\frac{e^{U}}{1+e^{U}}\\right]
-
-    where :math:`L` and :math:`U` are the lower and upper bounds on the logit scale,
-    and :math:`\\hat{p} = x/n` is the sample proportion.
 
     Args:
         x (int): Number of successes (0 ≤ x ≤ n)
@@ -653,11 +647,13 @@ def logit(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Special cases:
+    Special Cases:
         - When x=0: lower = 0, upper calculated using beta distribution
         - When x=n: upper = 1, lower calculated using beta distribution
 
-
+    References
+    ----------
+    .. [1] Lachin, John M. Biostatistical methods: the assessment of relative risks. John Wiley & Sons, 2014.
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
@@ -692,14 +688,7 @@ def logit(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
 
 def cloglog(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterval:
     """
-    Complementary log-log transformation confidence interval for binomial proportions.
-
-    The complementary log-log (cloglog) transformation is particularly useful
-    when the true proportion is expected to be close to 0. This transformation
-    provides asymmetric confidence intervals that can better capture the
-    skewness in the sampling distribution.
-
-    The transformation and confidence interval are given by:
+    Complementary log-log transformation confidence interval for binomial proportions [1].
 
     .. math::
         \\text{cloglog}(\\hat{p}) &= \\ln(-\\ln(1-\\hat{p})) \\\\
@@ -707,9 +696,6 @@ def cloglog(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
         \\text{Var}[\\text{cloglog}(\\hat{p})] &= \\frac{1-\\hat{p}}{n\\hat{p}\\mu^2} \\\\
         \\text{cloglog}(CI) &= \\text{cloglog}(\\hat{p}) \\pm z_{1-\\alpha/2} \\sqrt{\\text{Var}[\\text{cloglog}(\\hat{p})]} \\\\
         CI &= [\\exp(-\\exp(U)), \\exp(-\\exp(L))]
-
-    where :math:`L` and :math:`U` are the lower and upper bounds on the cloglog scale,
-    and :math:`\\hat{p} = x/n` is the sample proportion.
 
     Args:
         x (int): Number of successes (0 ≤ x ≤ n)
@@ -719,11 +705,13 @@ def cloglog(x: int, n: int, confidence_level: float = 0.95) -> ConfidenceInterva
     Returns:
         ConfidenceInterval: Object containing the confidence interval bounds and metadata
 
-    Special cases:
+    Special Cases:
         - When x=0: lower = 0, upper = :math:`1 - (\\alpha/2)^{1/n}`
         - When x=n: lower = :math:`(\\alpha/2)^{1/n}`, upper = 1
 
-
+    References
+    ----------
+    .. [1] Lachin, John M. Biostatistical methods: the assessment of relative risks. John Wiley & Sons, 2014.
     """
     _check_inputs(x, n, confidence_level)
     z_score = _z_score(confidence_level)
